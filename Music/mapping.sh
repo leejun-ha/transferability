@@ -9,7 +9,7 @@ models="microsoft/codebert-base-mlm"
 
 for model in $models
 do
-    CUDA_VISIBLE_DEVICES=3 python mapping.py \
+    CUDA_VISIBLE_DEVICES=2 python mapping.py \
         --model ${model}  \
 
 done

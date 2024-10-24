@@ -6,7 +6,7 @@ export USE_TORCH=1
 # microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
-model="microsoft/codebert-base-mlm"
+model="bert-base-chinese"
 
 epoch=15
 batch=16

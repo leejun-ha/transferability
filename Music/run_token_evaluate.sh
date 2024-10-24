@@ -1,24 +1,24 @@
 export USE_TORCH=1
 task="maestro-v1"
-models="neulab/codebert-python"
+
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
 # bert-base-german-cased wietsedv/bert-base-dutch-cased  neuralmind/bert-base-portuguese-cased	aubmindlab/bert-base-arabert tohoku-nlp/bert-base-japanese kykim/bert-kor-base 
 # microsoft/codebert-base neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # bertin-project/bertin-roberta-base-spanish" 
-
+model="bert-base-german-cased"
 step=3000
 seed=2020
 batch=16
-token_len=384
+token_lens="64 128 256 384 512"
 
-for model in $models
+for token_len in $token_lens
 do
     CUDA_VISIBLE_DEVICES=2 python evaluate.py --task $task \
         --split test \
         --step ${step} \
         -b ${batch} \
         --type pretrain \
-        --model $model \
+        --model ${model} \
         --seed ${seed} \
         --logdir ./log/$task \
         --state_dict ./pth/save_model \

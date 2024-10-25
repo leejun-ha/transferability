@@ -3,10 +3,10 @@ task="maestro-v1"
 
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
 # bert-base-german-cased wietsedv/bert-base-dutch-cased  neuralmind/bert-base-portuguese-cased	aubmindlab/bert-base-arabert tohoku-nlp/bert-base-japanese kykim/bert-kor-base 
-# microsoft/codebert-base neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
+# microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # bertin-project/bertin-roberta-base-spanish" 
 model="bert-base-german-cased"
-step=3000
+step="best"
 seed=2020
 batch=16
 token_lens="64 128 256 384 512"

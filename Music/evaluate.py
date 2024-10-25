@@ -24,7 +24,7 @@ parser.add_argument('--split', type = str, choices=['dev', 'test'], default='tes
 parser.add_argument('--state_dict', type = str, default = '')
 parser.add_argument('--batch_size', '-b', type = int, default = 16)
 parser.add_argument('--shift_table', type = str, default = '')
-parser.add_argument('--step', type = int)
+parser.add_argument('--step', type = str)
 
 parser.add_argument('--logdir', type = str, default = './log')
 parser.add_argument('--datadir', type = str)
@@ -40,6 +40,12 @@ random.seed(args['seed'])
 np.random.seed(args['seed'])
 torch.manual_seed(args['seed'])
 
+if args['step'] is not None:
+    if args['step'].isdigit():
+        args['step'] = int(args['step'])
+    else:
+        # Keep it as a string if it cannot be converted to an integer
+        pass
 
 torch.backends.cudnn.benchmark = True
 
@@ -87,8 +93,8 @@ model.cuda()
 if args['shift_table'] != '':
     shift_table = torch.load(args['shift_table']).cuda()
 
-writer = tensorboardX.SummaryWriter(log_dir=args['logdir'], 
-                                    filename_suffix=f'_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}')
+# writer = tensorboardX.SummaryWriter(log_dir=args['logdir'], 
+#                                     filename_suffix=f'_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}')
 model = model.eval()
 
 with torch.no_grad():
@@ -110,6 +116,6 @@ with torch.no_grad():
     #print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
     print(f'acc:{dev_acc/label.shape[0]}')
     #writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
-    writer.add_scalar(f'{args["split"]}_acc', dev_acc/label.shape[0], args['step'])
-    writer.close()
+    # writer.add_scalar(f'{args["split"]}_acc', dev_acc/label.shape[0], args['step'])
+    # writer.close()
     

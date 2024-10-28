@@ -1,0 +1,27 @@
+Tokens = 0: 0
+Tokens <= 0: 0
+
+Tokens = 64: 187
+Tokens <= 64: 6972
+
+Tokens = 128: 94
+Tokens <= 128: 17120
+
+Tokens = 256: 64
+Tokens <= 256: 28781
+
+Tokens = 384: 52
+Tokens <= 384: 35995
+
+Tokens = 512: 34
+Tokens <= 512: 41077
+
+Tokens = 768: 19
+Tokens <= 768: 47460
+
+Tokens = 1024: 15
+Tokens <= 1024: 51128
+
+Tokens = 2048: 1
+Tokens <= 2048: 57113
+

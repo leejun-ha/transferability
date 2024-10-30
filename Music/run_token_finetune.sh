@@ -1,20 +1,21 @@
 export USE_TORCH=1
 
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
-# bert-base-german-cased wietsedv/bert-base-dutch-cased  neuralmind/bert-base-portuguese-cased	aubmindlab/bert-base-arabert 
-# tohoku-nlp/bert-base-japanese kykim/bert-kor-base bertin-project/bertin-roberta-base-spanish 
+# bert-base-german-cased neuralmind/bert-base-portuguese-cased 
+# tohoku-nlp/bert-base-japanese
 # microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
-model="tohoku-nlp/bert-base-japanese"
+model="bert-base-multilingual-uncased"
 
 epoch=15
 batch=16
-token_lens="64 128 256 384 512"
+# token_lens="64 128 256 384 512"
+token_lens="512"
 
 for token_len in $token_lens
 do
-    CUDA_VISIBLE_DEVICES=3 python finetune.py \
+    CUDA_VISIBLE_DEVICES=2 python finetune.py \
         --model ${model}  \
         --type pretrain \
         -e ${epoch} \

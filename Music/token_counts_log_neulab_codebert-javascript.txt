@@ -1,0 +1,11 @@
+Tokens 0-99: 247
+Tokens 100-199: 374
+Tokens 200-299: 188
+Tokens 300-399: 97
+Tokens 400-499: 85
+Tokens 500-599: 61
+Tokens 600-699: 41
+Tokens 700-799: 24
+Tokens 800-899: 23
+Tokens 900-999: 11
+Tokens 1000-1099: 19

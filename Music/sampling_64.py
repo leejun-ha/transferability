@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Set up logging
-logging.basicConfig(filename='token_analysis_64.log', level=logging.INFO, 
+logging.basicConfig(filename='token_analysis_range.log', level=logging.INFO, 
                     format='%(asctime)s - %(message)s')
 
 # Initialize the BERT tokenizer
@@ -66,26 +66,24 @@ def analyze_tokens(dataset):
 # Analyze tokens in sampled Wikipedia dataset
 average_count, token_counts_per_sequence, frequencies, total_tokens = analyze_tokens(sampled_dataset)
 
-# Function to save token counts in increments of 100
-def save_token_counts_in_log(token_counts, max_range=1000, increment=100):
-    with open('token_counts_log_64.txt', 'w') as f:
-        for i in range(0, max_range + 1, increment):
-            in_range_count = sum(1 for count in token_counts if i <= count < i + increment)
-            f.write(f"Tokens {i}-{i + increment - 1}: {in_range_count}\n")
+# Function to save token counts in specified ranges
+def save_token_counts_in_ranges(token_counts):
+    ranges = [
+        (0, 32), (32, 96), (96, 192), (192, 320), (320, 480),
+        (480, 672), (672, 896), (896, 1152), (1152, 1440), (1440, 1760)
+    ]
+    
+    with open('token_counts_ranges_64.txt', 'w') as f:
+        for start, end in ranges:
+            in_range_count = sum(1 for count in token_counts if start < count <= end)
+            f.write(f"{start} < Tokens <= {end}: {in_range_count}\n")
+        
+        # Add a final range for tokens > 1760
+        above_max_count = sum(1 for count in token_counts if count > 1760)
+        f.write(f"Tokens > 1760: {above_max_count}\n")
 
-# Function to save token counts for specific sequence lengths
-def save_specific_token_counts(token_counts, specific_lengths):
-    with open('specific_token_counts_log_64.txt', 'w') as f:
-        for length in specific_lengths:
-            exact_count = sum(1 for count in token_counts if count == length)
-            less_than_count = sum(1 for count in token_counts if count <= length)
-            f.write(f"Tokens = {length}: {exact_count}\n")
-            f.write(f"Tokens <= {length}: {less_than_count}\n\n")
-
-# Save token counts logs
-save_token_counts_in_log(token_counts_per_sequence)
-specific_lengths = [0, 64, 128, 256, 384, 512, 768, 1024, 2048]
-save_specific_token_counts(token_counts_per_sequence, specific_lengths)
+# Save token counts in ranges
+save_token_counts_in_ranges(token_counts_per_sequence)
 
 # Log results
 logging.info(f"Average Token Count per Sequence: {average_count:.2f}")
@@ -99,30 +97,37 @@ logging.info(f"Original dataset size: {len(wikipedia_dataset)}")
 logging.info(f"Sampled dataset size: {len(sampled_dataset)}")
 
 # Visualizations
-plt.figure(figsize=(20, 20))
+plt.figure(figsize=(20, 15))
 
-# Fine-grained distribution of token counts per sequence (0-1000 range)
-plt.subplot(3, 2, 1)
-sns.histplot(data=[count for count in token_counts_per_sequence if count <= 1000], 
-             kde=True, bins=100)
-plt.title("Distribution of Token Counts per Sequence (0-1000 range)")
-plt.xlabel("Number of Tokens")
-plt.ylabel("Frequency")
-plt.xlim(0, 1000)
+# Distribution of token counts per sequence in specified ranges
+plt.subplot(2, 2, 1)
+ranges = [
+    (0, 32), (32, 96), (96, 192), (192, 320), (320, 480),
+    (480, 672), (672, 896), (896, 1152), (1152, 1440), (1440, 1760)
+]
+range_counts = [sum(1 for count in token_counts_per_sequence if start < count <= end) for start, end in ranges]
+range_labels = [f"{start}-{end}" for start, end in ranges]
+range_labels.append(">1760")
+range_counts.append(sum(1 for count in token_counts_per_sequence if count > 1760))
+
+plt.bar(range(len(range_counts)), range_counts)
+plt.title("Distribution of Token Counts per Sequence")
+plt.xlabel("Token Count Ranges")
+plt.ylabel("Number of Sequences")
+plt.xticks(range(len(range_labels)), range_labels, rotation=45, ha='right')
 
 # Cumulative distribution function of token counts
-plt.subplot(3, 2, 2)
-sorted_counts = sorted([count for count in token_counts_per_sequence if count <= 1000])
+plt.subplot(2, 2, 2)
+sorted_counts = sorted(token_counts_per_sequence)
 cumulative = np.arange(1, len(sorted_counts) + 1) / len(sorted_counts)
 plt.plot(sorted_counts, cumulative)
 plt.title("Cumulative Distribution of Token Counts per Sequence")
 plt.xlabel("Number of Tokens")
 plt.ylabel("Cumulative Proportion")
-plt.xlim(0, 1000)
-plt.ylim(0, 1)
+plt.xscale('log')  # Use log scale for x-axis to better show the distribution
 
 # Top 20 token frequencies
-plt.subplot(3, 2, 3)
+plt.subplot(2, 2, 3)
 top_20 = sorted(frequencies.items(), key=lambda x: x[1], reverse=True)[:20]
 tokens, freqs = zip(*top_20)
 sns.barplot(x=list(tokens), y=list(freqs))
@@ -131,28 +136,16 @@ plt.xlabel("Tokens")
 plt.ylabel("Frequency")
 plt.xticks(rotation=90)
 
-# Box plot of token counts (0-1000 range)
-plt.subplot(3, 2, 4)
-sns.boxplot(y=[count for count in token_counts_per_sequence if count <= 1000])
-plt.title("Boxplot of Token Counts per Sequence (0-1000 range)")
+# Box plot of token counts
+plt.subplot(2, 2, 4)
+sns.boxplot(y=token_counts_per_sequence)
+plt.title("Boxplot of Token Counts per Sequence")
 plt.ylabel("Number of Tokens")
-plt.ylim(0, 1000)
-
-# Specific sequence length distribution
-plt.subplot(3, 2, (5, 6))
-specific_counts = [sum(1 for count in token_counts_per_sequence if count <= length) for length in specific_lengths]
-plt.bar(range(len(specific_lengths)), specific_counts, tick_label=specific_lengths)
-plt.title("Cumulative Distribution for Specific Sequence Lengths")
-plt.xlabel("Sequence Length")
-plt.ylabel("Number of Sequences")
-plt.xticks(rotation=45)
-
-for i, count in enumerate(specific_counts):
-    plt.text(i, count, str(count), ha='center', va='bottom')
+plt.yscale('log')  # Use log scale for y-axis to better show the distribution
 
 plt.tight_layout()
-plt.savefig('token_analysis_64.png', dpi=300)
+plt.savefig('token_analysis_range.png', dpi=300)
 plt.close()
 
-print("Analysis complete. Results logged to 'token_analysis_64.log' and visualizations saved to 'token_analysis.png'.")
-print("Token count distribution saved to 'token_counts_log.txt' and 'specific_token_counts_log.txt'.")
+print("Analysis complete. Results logged to 'token_analysis.log' and visualizations saved to 'token_analysis.png'.")
+print("Token count distribution saved to 'token_counts_ranges.txt'.")

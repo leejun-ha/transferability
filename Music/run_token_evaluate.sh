@@ -2,9 +2,9 @@ export USE_TORCH=1
 task="maestro-v1"
 
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
-# bert-base-german-cased wietsedv/bert-base-dutch-cased  neuralmind/bert-base-portuguese-cased	aubmindlab/bert-base-arabert tohoku-nlp/bert-base-japanese kykim/bert-kor-base 
+# bert-base-german-cased neuralmind/bert-base-portuguese-cased tohoku-nlp/bert-base-japanese
 # microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c"
-model="neulab/codebert-java"
+model="tohoku-nlp/bert-base-japanese"
 step="best"
 seed=2020
 batch=16

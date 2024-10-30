@@ -32,6 +32,7 @@ logging.basicConfig(filename='token_analysis_all_models.log', level=logging.INFO
 #     "neulab/codebert-c"
 # ]
 models = [
+    "bert-base-uncased",
     "microsoft/codebert-base-mlm",
      "neulab/codebert-javascript"
 ]
@@ -72,32 +73,46 @@ def get_length_bin(length):
     else:
         return 3
 
-def create_token_mapping_shift_table(tokenizer, frequencies, model_name):
+def create_token_mapping_shift_tables(tokenizer, frequencies, model_name):
     vocab = tokenizer.get_vocab()
-    ranked_frequencies = get_frequency_ranking(frequencies)
+    vocab_size = len(vocab)
     
-    unused_token_count = sum(1 for token in vocab if token.startswith('[unused'))
-    token_mapping = {}
+    # Sort tokens by frequency
+    sorted_tokens = sorted(frequencies.items(), key=lambda x: x[1], reverse=True)
     
-    for token, index in vocab.items():
-        if token.startswith('[unused'):
-            token_mapping[index] = index
-        else:
-            rank = ranked_frequencies.get(token, len(vocab))
-            token_mapping[index] = unused_token_count + rank
+    # Create three groups of 256 tokens each
+    top_256 = sorted_tokens[:256]
+    middle_256 = sorted_tokens[len(sorted_tokens)//2 - 128:len(sorted_tokens)//2 + 128]
+    low_256 = sorted_tokens[-256:]
     
-    mapping_tensor = torch.zeros(256, 1, dtype=torch.long)
-    for i in range(min(256, len(vocab))):
-        mapping_tensor[i, 0] = token_mapping.get(i, i)
+    def create_mapping(token_group):
+        token_to_rank = {token: rank for rank, (token, _) in enumerate(token_group)}
+        token_mapping = {}
+        for token, index in vocab.items():
+            if token in token_to_rank:
+                token_mapping[index] = token_to_rank[token]
+            else:
+                # For tokens not in the group, map to the end
+                token_mapping[index] = 256
+        
+        mapping_tensor = torch.zeros(256, 1, dtype=torch.long)
+        for i in range(256):
+            mapping_tensor[i, 0] = token_mapping.get(i, i)
+        
+        mapping_tensor = mapping_tensor.float()
+        mapping_tensor.requires_grad_(True)
+        return torch.nn.Embedding.from_pretrained(mapping_tensor, freeze=False)
     
-    mapping_tensor = mapping_tensor.float()
-    mapping_tensor.requires_grad_(True)
-    embedding_layer = torch.nn.Embedding.from_pretrained(mapping_tensor, freeze=False)
+    top_embedding = create_mapping(top_256)
+    middle_embedding = create_mapping(middle_256)
+    low_embedding = create_mapping(low_256)
     
     model_replace = model_name.replace("/", "_")
-    torch.save(embedding_layer, f'shift_table/{model_replace}_bert_token_mapping.pkl')
+    torch.save(top_embedding, f'shift_table/{model_replace}_top_256_token_mapping.pkl')
+    torch.save(middle_embedding, f'shift_table/{model_replace}_middle_256_token_mapping.pkl')
+    torch.save(low_embedding, f'shift_table/{model_replace}_low_256_token_mapping.pkl')
     
-    return embedding_layer
+    return top_embedding, middle_embedding, low_embedding
 
 def create_stratified_sample(dataset, sample_ratio=0.01):
     bins = defaultdict(list)
@@ -191,20 +206,18 @@ for model_name in models:
     sampled_dataset = create_stratified_sample(dataset)
     
     # Analyze tokens
-    average_count, token_counts_per_sequence, frequencies, total_tokens = analyze_tokens(sampled_dataset, tokenizer)
+    average_count, token_counts_per_sequence, token_frequencies, total_tokens = analyze_tokens(sampled_dataset, tokenizer)
     
-    # Create and save token mapping shift table
-    embedding_layer = create_token_mapping_shift_table(tokenizer, frequencies, model_name)
+    # Create and save token mapping shift tables
+    top_embedding, middle_embedding, low_embedding = create_token_mapping_shift_tables(tokenizer, token_frequencies, model_name)
     
-    # Log information about the created embedding
-    logging.info(f"Token Mapping Shift Table created for {model_name}")
-    logging.info(f"Embedding layer: {embedding_layer}")
-    logging.info(f"Embedding weight shape: {embedding_layer.weight.shape}")
-    logging.info(f"Number of embeddings: {embedding_layer.num_embeddings}")
-    logging.info(f"Embedding dimension: {embedding_layer.embedding_dim}")
-    logging.info(f"First embedding vector: {embedding_layer.weight[0]}")
-    logging.info(f"Padding index: {embedding_layer.padding_idx}")
-    logging.info(f"Embeddings frozen: {embedding_layer.weight.requires_grad == False}")
+    # Log information about the created embeddings
+    for name, embedding in [("Top 256", top_embedding), ("Middle 256", middle_embedding), ("Low 256", low_embedding)]:
+        logging.info(f"{name} Token Mapping Shift Table created for {model_name}")
+        logging.info(f"Embedding layer: {embedding}")
+        logging.info(f"Embedding weight shape: {embedding.weight.shape}")
+        logging.info(f"Number of embeddings: {embedding.num_embeddings}")
+        logging.info(f"Embedding dimension: {embedding.embedding_dim}")
     
     # Log results
     logging.info(f"Model: {model_name}")

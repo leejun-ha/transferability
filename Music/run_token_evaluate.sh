@@ -4,7 +4,7 @@ task="maestro-v1"
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
 # bert-base-german-cased neuralmind/bert-base-portuguese-cased tohoku-nlp/bert-base-japanese
 # microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c"
-model="bert-base-uncased"
+model="microsoft/codebert-base-mlm"
 step="best"
 seed=2020
 batch=16
@@ -14,7 +14,7 @@ rankings="top middle low"
 
 for ranking in $rankings
 do
-    CUDA_VISIBLE_DEVICES=3 python evaluate.py --task $task \
+    CUDA_VISIBLE_DEVICES=2 python evaluate.py --task $task \
         --split test \
         --step ${step} \
         -b ${batch} \

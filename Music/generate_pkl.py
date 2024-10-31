@@ -41,8 +41,10 @@ def create_token_mapping_shift_tables(tokenizer, frequencies, model_name):
 
 # Usage
 models = [
-    "bert-base-uncased",
-    "microsoft/codebert-base-mlm"
+    "neulab/codebert-javascript",
+    "neulab/codebert-java",
+    "neulab/codebert-python",
+    "neulab/codebert-c"
 ]
 
 for model_name in models:

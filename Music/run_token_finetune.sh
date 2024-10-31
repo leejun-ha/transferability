@@ -6,21 +6,22 @@ export USE_TORCH=1
 # microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
-model="bert-base-multilingual-uncased"
+model="microsoft/codebert-base-mlm"
 
 epoch=15
 batch=16
 # token_lens="64 128 256 384 512"
-token_lens="512"
+token_len="256"
+rankings="top middle low"
 
-for token_len in $token_lens
+for ranking in $rankings
 do
-    CUDA_VISIBLE_DEVICES=2 python finetune.py \
+    CUDA_VISIBLE_DEVICES=3 python finetune.py \
         --model ${model}  \
         --type pretrain \
         -e ${epoch} \
         -b ${batch} \
         --token_len ${token_len} \
-        --shift_table ./shift_table
-
+        --shift_table ./shift_table \
+        --ranking ${ranking}
 done

@@ -30,6 +30,7 @@ parser.add_argument('--logdir', type = str, default = './log')
 parser.add_argument('--datadir', type = str)
 
 parser.add_argument('--token_len', type = int, default = 128)
+parser.add_argument('--ranking', type = str, default = '')
 
 args = vars(parser.parse_args())
 
@@ -58,8 +59,12 @@ model_replace = args["model"]
 model_replace = model_replace.replace("/", "_")
 print(model_replace)
 
-args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
-print(args["shift_table"])
+ranking = args["ranking"]
+
+if(args["ranking"] == None):
+    args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
+else:
+    args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + ranking + '_256_token_mapping.pkl')
 
 token_len = args["token_len"]    
 
@@ -84,7 +89,10 @@ num_labels = len(composer2id)
 config = transformers.AutoConfig.from_pretrained(model_name, num_labels = num_labels)
 model = transformers.AutoModelForSequenceClassification.from_config(config)#.to(device)
 if args['shift_table'] != '':
-    state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
+    if args['ranking'] == None :
+        state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
+    else:      
+        state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_{args["ranking"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
 else:
     state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_{args["step"]}.pkl')
 model.load_state_dict(torch.load(state_dict_path))

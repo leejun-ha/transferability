@@ -56,6 +56,7 @@ def main():
     parser.add_argument('--postfix', type = str, default = '')
     
     parser.add_argument('--token_len', type = int, default = 128)
+    parser.add_argument('--ranking', type = str, default = '')
     args = vars(parser.parse_args())
 
     # remove "/" in model name
@@ -64,12 +65,19 @@ def main():
     print(model_replace)
     
     token_len = args['token_len']
+    ranking = args['ranking']
+    if(args['ranking'] == None):
+        args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
+    else:
+        args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + ranking + '_256_token_mapping.pkl')
     
-    args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
     print(args["shift_table"])
     
     if args['filename'] == None:
-        args['filename'] = f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}'
+        if(args['ranking'] == None):
+            args['filename'] = f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}'
+        else:
+            args['filename'] = f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_{ranking}_tokenlen{token_len}'
     if args['shift']!=0:
         args['filename'] += f'_shift{args["shift"]}'
     if args['shift_table']!='':

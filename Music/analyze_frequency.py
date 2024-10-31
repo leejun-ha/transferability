@@ -8,52 +8,22 @@ import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-
-
-
-import torch
-import pickle
+import json
 
 # Set up logging
 logging.basicConfig(filename='token_analysis_all_models.log', level=logging.INFO, 
                     format='%(asctime)s - %(message)s')
 
-# models = [
-#     "bert-base-uncased",
-#     "bert-base-chinese",
-#     "bert-base-multilingual-uncased",
-#     "bert-base-multilingual-cased",
-#     "bert-base-german-cased",
-#     "neuralmind/bert-base-portuguese-cased",
-#     "tohoku-nlp/bert-base-japanese",
-#     "microsoft/codebert-base",
-#     "microsoft/codebert-base-mlm",
-#     "neulab/codebert-javascript",
-#     "neulab/codebert-java",
-#     "neulab/codebert-python",
-#     "neulab/codebert-c"
-# ]
 models = [
     "bert-base-uncased",
     "microsoft/codebert-base-mlm"
-
 ]
 
 # Dataset mapping
 dataset_mapping = {
     "bert-base-uncased": ("wikipedia", "20220301.en"),
-    "bert-base-chinese": ("wikipedia", "20220301.zh"),
-    "bert-base-multilingual-uncased": ("wikipedia", "20220301.en"),
-    "bert-base-multilingual-cased": ("wikipedia", "20220301.en"),
-    "bert-base-german-cased": ("wikipedia", "20200501.de"),
-    "neuralmind/bert-base-portuguese-cased": ("wikipedia", "20200501.pt"),
-    "tohoku-nlp/bert-base-japanese": ("wikipedia", "20200501.ja"),
-    "microsoft/codebert-base": ("code_search_net", "all"),
     "microsoft/codebert-base-mlm": ("code_search_net", "all"),
-    "neulab/codebert-javascript": ("code_search_net", "javascript"),
-    "neulab/codebert-java": ("code_search_net", "java"),
-    "neulab/codebert-python": ("code_search_net", "python"),
-    "neulab/codebert-c": ("code_search_net", "go")  # Using Go as a proxy for C
+    # ... (other mappings)
 }
 
 def load_dataset_for_model(model_name):
@@ -75,62 +45,16 @@ def get_length_bin(length):
     else:
         return 3
 
-def create_token_mapping_shift_tables(tokenizer, frequencies, model_name):
-    vocab = tokenizer.get_vocab()
-    vocab_size = len(vocab)
-    
-    # Sort tokens by frequency
-    sorted_tokens = sorted(frequencies.items(), key=lambda x: x[1], reverse=True)
-    
-    # Create three groups of 256 tokens each
-    top_256 = sorted_tokens[:256]
-    middle_256 = sorted_tokens[len(sorted_tokens)//2 - 128:len(sorted_tokens)//2 + 128]
-    low_256 = sorted_tokens[-256:]
-    
-    def create_mapping(token_group):
-        token_to_rank = {token: rank for rank, (token, _) in enumerate(token_group)}
-        token_mapping = {}
-        for token, index in vocab.items():
-            if token in token_to_rank:
-                token_mapping[index] = token_to_rank[token]
-            else:
-                # For tokens not in the group, map to the end
-                token_mapping[index] = 256
-        
-        mapping_tensor = torch.zeros(256, 1, dtype=torch.long)
-        for i in range(256):
-            mapping_tensor[i, 0] = token_mapping.get(i, i)
-        
-        mapping_tensor = mapping_tensor.float()
-        mapping_tensor.requires_grad_(True)
-        return torch.nn.Embedding.from_pretrained(mapping_tensor, freeze=False)
-    
-    top_embedding = create_mapping(top_256)
-    middle_embedding = create_mapping(middle_256)
-    low_embedding = create_mapping(low_256)
-    
-    model_replace = model_name.replace("/", "_")
-    torch.save(top_embedding, f'shift_table/{model_replace}_top_256_token_mapping.pkl')
-    torch.save(middle_embedding, f'shift_table/{model_replace}_middle_256_token_mapping.pkl')
-    torch.save(low_embedding, f'shift_table/{model_replace}_low_256_token_mapping.pkl')
-    
-    return top_embedding, middle_embedding, low_embedding
-
 def create_stratified_sample(dataset, sample_ratio=0.01):
     bins = defaultdict(list)
     
-    # Identify the key containing the text data
-    text_key = None
-    for key in dataset.features.keys():
-        if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string':
-            text_key = key
-            break
+    text_key = next((key for key in dataset.features.keys() 
+                     if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string'), None)
     
     if text_key is None:
         raise ValueError("Could not find a suitable text field in the dataset")
 
     for i, item in enumerate(dataset):
-        # Use the identified text key
         text = item[text_key]
         length_bin = get_length_bin(len(text))
         bins[length_bin].append(i)
@@ -147,18 +71,13 @@ def analyze_tokens(dataset, tokenizer):
     total_tokens = 0
     token_frequencies = defaultdict(int)
 
-    # Identify the key containing the text data
-    text_key = None
-    for key in dataset.features.keys():
-        if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string':
-            text_key = key
-            break
+    text_key = next((key for key in dataset.features.keys() 
+                     if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string'), None)
     
     if text_key is None:
         raise ValueError("Could not find a suitable text field in the dataset")
 
     for item in tqdm(dataset, desc="Processing Items"):
-        # Use the identified text key
         text = item[text_key]
         tokens = tokenizer.tokenize(text)
         token_count = len(tokens)
@@ -219,49 +138,36 @@ def create_visualizations(token_counts_per_sequence, frequencies, model_name):
 # Main analysis loop
 for model_name in models:
     logging.info(f"Analyzing model: {model_name}")
-    
-    # Load tokenizer
+
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    
-    # Load dataset
     dataset = load_dataset_for_model(model_name)
-    # Create sample
     sampled_dataset = create_stratified_sample(dataset)
-    
-    # Analyze tokens
-    average_count, token_counts_per_sequence, frequencies, total_tokens = analyze_tokens(sampled_dataset, tokenizer)
-    
-    # Create and save token mapping shift tables
-    top_embedding, middle_embedding, low_embedding = create_token_mapping_shift_tables(tokenizer, frequencies, model_name)
-    
-    # Log information about the created embeddings
-    for name, embedding in [("Top 256", top_embedding), ("Middle 256", middle_embedding), ("Low 256", low_embedding)]:
-        logging.info(f"{name} Token Mapping Shift Table created for {model_name}")
-        logging.info(f"Embedding layer: {embedding}")
-        logging.info(f"Embedding weight shape: {embedding.weight.shape}")
-        logging.info(f"Number of embeddings: {embedding.num_embeddings}")
-        logging.info(f"Embedding dimension: {embedding.embedding_dim}")
-    
+
+    average_count, token_counts_per_sequence, token_frequencies, total_tokens = analyze_tokens(sampled_dataset, tokenizer)
+
     # Log results
     logging.info(f"Model: {model_name}")
     logging.info(f"Average Token Count per Sequence: {average_count:.2f}")
     logging.info(f"Total number of tokens: {total_tokens}")
     logging.info(f"Total number of sequences: {len(token_counts_per_sequence)}")
     logging.info("Top 10 Token Frequencies:")
-    for token, freq in sorted(frequencies.items(), key=lambda x: x[1], reverse=True)[:10]:
+    for token, freq in sorted(token_frequencies.items(), key=lambda x: x[1], reverse=True)[:10]:
         logging.info(f"{token}: {freq}")
     logging.info(f"Original dataset size: {len(dataset)}")
     logging.info(f"Sampled dataset size: {len(sampled_dataset)}")
-    
+
     # Save token counts log
     save_token_counts_in_log(token_counts_per_sequence, f'token_counts_log_{model_name.replace("/", "_")}.txt')
-    
+
     # Create visualizations
-    create_visualizations(token_counts_per_sequence, frequencies, model_name)
-    
+    create_visualizations(token_counts_per_sequence, token_frequencies, model_name)
+
+    # Save frequency ranking
+    with open(f'{model_name.replace("/", "_")}_frequency_ranking.json', 'w') as f:
+        json.dump(dict(sorted(token_frequencies.items(), key=lambda x: x[1], reverse=True)), f)
+
     logging.info(f"Analysis complete for {model_name}")
     logging.info("--------------------")
 
 print("Analysis complete for all models. Results logged to 'token_analysis_all_models.log'.")
-print("Visualizations, token count distributions, and token mapping shift tables saved for each model.")
-
+print("Visualizations, token count distributions, and frequency rankings saved for each model.")

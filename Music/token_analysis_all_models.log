@@ -84,3 +84,161 @@
 2024-10-29 00:58:54,479 - Sampled dataset size: 1237
 2024-10-29 00:58:57,818 - Analysis complete for neulab/codebert-javascript
 2024-10-29 00:58:57,818 - --------------------
+2024-10-30 12:23:30,717 - Analyzing model: bert-base-uncased
+2024-10-30 12:23:35,649 - Could not cache non-existence of file. Will ignore error and continue. Error: [Errno 13] Permission denied: '/home/junha/.cache/huggingface/hub/datasets--wikipedia/.no_exist/97a0b052c326b45fb68593a14972d9eed884cd17/dataset_infos.json'
+2024-10-30 12:32:09,559 - Analyzing model: bert-base-uncased
+2024-10-30 12:44:38,043 - Analyzing model: bert-base-uncased
+2024-10-30 12:57:31,020 - Analyzing model: microsoft/codebert-base-mlm
+2024-10-30 13:43:33,764 - Analyzing model: bert-base-uncased
+2024-10-30 13:54:36,574 - Top 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 13:54:36,575 - Embedding layer: Embedding(256, 1)
+2024-10-30 13:54:36,575 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 13:54:36,575 - Number of embeddings: 256
+2024-10-30 13:54:36,576 - Embedding dimension: 1
+2024-10-30 13:54:36,576 - Middle 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 13:54:36,576 - Embedding layer: Embedding(256, 1)
+2024-10-30 13:54:36,576 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 13:54:36,576 - Number of embeddings: 256
+2024-10-30 13:54:36,576 - Embedding dimension: 1
+2024-10-30 13:54:36,576 - Low 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 13:54:36,576 - Embedding layer: Embedding(256, 1)
+2024-10-30 13:54:36,576 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 13:54:36,576 - Number of embeddings: 256
+2024-10-30 13:54:36,576 - Embedding dimension: 1
+2024-10-30 13:54:36,576 - Model: bert-base-uncased
+2024-10-30 13:54:36,576 - Average Token Count per Sequence: 4.35
+2024-10-30 13:54:36,576 - Total number of tokens: 281248
+2024-10-30 13:54:36,576 - Total number of sequences: 64586
+2024-10-30 13:54:36,576 - Top 10 Token Frequencies:
+2024-10-30 13:56:26,643 - Analyzing model: bert-base-uncased
+2024-10-30 14:06:59,544 - Top 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 14:06:59,545 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:06:59,545 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:06:59,545 - Number of embeddings: 256
+2024-10-30 14:06:59,545 - Embedding dimension: 1
+2024-10-30 14:06:59,545 - Middle 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 14:06:59,545 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:06:59,545 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:06:59,545 - Number of embeddings: 256
+2024-10-30 14:06:59,545 - Embedding dimension: 1
+2024-10-30 14:06:59,545 - Low 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 14:06:59,545 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:06:59,545 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:06:59,545 - Number of embeddings: 256
+2024-10-30 14:06:59,545 - Embedding dimension: 1
+2024-10-30 14:06:59,545 - Model: bert-base-uncased
+2024-10-30 14:06:59,545 - Average Token Count per Sequence: 4.36
+2024-10-30 14:06:59,545 - Total number of tokens: 281302
+2024-10-30 14:06:59,546 - Total number of sequences: 64586
+2024-10-30 14:06:59,546 - Top 10 Token Frequencies:
+2024-10-30 14:07:12,441 - Analyzing model: bert-base-uncased
+2024-10-30 14:17:25,436 - Top 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 14:17:25,439 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:17:25,439 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:17:25,439 - Number of embeddings: 256
+2024-10-30 14:17:25,439 - Embedding dimension: 1
+2024-10-30 14:17:25,439 - Middle 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 14:17:25,439 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:17:25,439 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:17:25,439 - Number of embeddings: 256
+2024-10-30 14:17:25,439 - Embedding dimension: 1
+2024-10-30 14:17:25,440 - Low 256 Token Mapping Shift Table created for bert-base-uncased
+2024-10-30 14:17:25,440 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:17:25,440 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:17:25,440 - Number of embeddings: 256
+2024-10-30 14:17:25,440 - Embedding dimension: 1
+2024-10-30 14:17:25,440 - Model: bert-base-uncased
+2024-10-30 14:17:25,440 - Average Token Count per Sequence: 4.36
+2024-10-30 14:17:25,440 - Total number of tokens: 281754
+2024-10-30 14:17:25,440 - Total number of sequences: 64586
+2024-10-30 14:17:25,440 - Top 10 Token Frequencies:
+2024-10-30 14:17:25,440 - ##9: 22536
+2024-10-30 14:17:25,440 - ##7: 20426
+2024-10-30 14:17:25,440 - ##8: 18477
+2024-10-30 14:17:25,441 - ##6: 13920
+2024-10-30 14:17:25,441 - ##0: 9703
+2024-10-30 14:17:25,441 - ##3: 4500
+2024-10-30 14:17:25,441 - ##2: 4291
+2024-10-30 14:17:25,441 - ##1: 4190
+2024-10-30 14:17:25,441 - ##4: 4169
+2024-10-30 14:17:25,441 - ##5: 3233
+2024-10-30 14:17:25,441 - Original dataset size: 6458670
+2024-10-30 14:17:25,441 - Sampled dataset size: 64586
+2024-10-30 14:17:31,141 - Analysis complete for bert-base-uncased
+2024-10-30 14:17:31,141 - --------------------
+2024-10-30 14:17:31,141 - Analyzing model: microsoft/codebert-base-mlm
+2024-10-30 14:36:05,302 - Top 256 Token Mapping Shift Table created for microsoft/codebert-base-mlm
+2024-10-30 14:36:05,306 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:36:05,306 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:36:05,306 - Number of embeddings: 256
+2024-10-30 14:36:05,306 - Embedding dimension: 1
+2024-10-30 14:36:05,306 - Middle 256 Token Mapping Shift Table created for microsoft/codebert-base-mlm
+2024-10-30 14:36:05,306 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:36:05,307 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:36:05,307 - Number of embeddings: 256
+2024-10-30 14:36:05,307 - Embedding dimension: 1
+2024-10-30 14:36:05,307 - Low 256 Token Mapping Shift Table created for microsoft/codebert-base-mlm
+2024-10-30 14:36:05,307 - Embedding layer: Embedding(256, 1)
+2024-10-30 14:36:05,307 - Embedding weight shape: torch.Size([256, 1])
+2024-10-30 14:36:05,307 - Number of embeddings: 256
+2024-10-30 14:36:05,307 - Embedding dimension: 1
+2024-10-30 14:36:05,307 - Model: microsoft/codebert-base-mlm
+2024-10-30 14:36:05,307 - Average Token Count per Sequence: 7.90
+2024-10-30 14:36:05,307 - Total number of tokens: 148597
+2024-10-30 14:36:05,307 - Total number of sequences: 18808
+2024-10-30 14:36:05,307 - Top 10 Token Frequencies:
+2024-10-30 14:36:05,312 - /: 18808
+2024-10-30 14:36:05,312 - -: 12797
+2024-10-30 14:36:05,312 - k: 2247
+2024-10-30 14:36:05,312 - aws: 1677
+2024-10-30 14:36:05,312 - j: 1404
+2024-10-30 14:36:05,313 - go: 1297
+2024-10-30 14:36:05,313 - sd: 1262
+2024-10-30 14:36:05,313 - m: 1233
+2024-10-30 14:36:05,313 - s: 1104
+2024-10-30 14:36:05,313 - p: 945
+2024-10-30 14:36:05,313 - Original dataset size: 1880853
+2024-10-30 14:36:05,313 - Sampled dataset size: 18808
+2024-10-30 14:36:10,510 - Analysis complete for microsoft/codebert-base-mlm
+2024-10-30 14:36:10,511 - --------------------
+2024-10-30 14:42:25,425 - Analyzing model: bert-base-uncased
+2024-10-30 14:43:15,676 - Analyzing model: bert-base-uncased
+2024-10-30 15:02:53,635 - Model: bert-base-uncased
+2024-10-30 15:02:53,639 - Average Token Count per Sequence: 4.36
+2024-10-30 15:02:53,640 - Total number of tokens: 281425
+2024-10-30 15:02:53,640 - Total number of sequences: 64586
+2024-10-30 15:02:53,640 - Top 10 Token Frequencies:
+2024-10-30 15:02:53,640 - ##9: 22361
+2024-10-30 15:02:53,641 - ##7: 20336
+2024-10-30 15:02:53,641 - ##8: 18500
+2024-10-30 15:02:53,641 - ##6: 13930
+2024-10-30 15:02:53,641 - ##0: 9756
+2024-10-30 15:02:53,641 - ##2: 4511
+2024-10-30 15:02:53,641 - ##3: 4451
+2024-10-30 15:02:53,641 - ##4: 4153
+2024-10-30 15:02:53,641 - ##1: 4145
+2024-10-30 15:02:53,641 - ##5: 3316
+2024-10-30 15:02:53,641 - Original dataset size: 6458670
+2024-10-30 15:02:53,641 - Sampled dataset size: 64586
+2024-10-30 15:02:59,875 - Analysis complete for bert-base-uncased
+2024-10-30 15:02:59,875 - --------------------
+2024-10-30 15:02:59,875 - Analyzing model: microsoft/codebert-base-mlm
+2024-10-30 16:05:29,473 - Model: microsoft/codebert-base-mlm
+2024-10-30 16:05:29,476 - Average Token Count per Sequence: 7.92
+2024-10-30 16:05:29,477 - Total number of tokens: 148978
+2024-10-30 16:05:29,477 - Total number of sequences: 18808
+2024-10-30 16:05:29,477 - Top 10 Token Frequencies:
+2024-10-30 16:05:29,485 - /: 18808
+2024-10-30 16:05:29,486 - -: 12963
+2024-10-30 16:05:29,486 - k: 2224
+2024-10-30 16:05:29,486 - aws: 1658
+2024-10-30 16:05:29,486 - j: 1443
+2024-10-30 16:05:29,486 - go: 1306
+2024-10-30 16:05:29,486 - sd: 1278
+2024-10-30 16:05:29,486 - m: 1194
+2024-10-30 16:05:29,486 - s: 1136
+2024-10-30 16:05:29,486 - p: 884
+2024-10-30 16:05:29,490 - Original dataset size: 1880853
+2024-10-30 16:05:29,490 - Sampled dataset size: 18808
+2024-10-30 16:05:35,401 - Analysis complete for microsoft/codebert-base-mlm
+2024-10-30 16:05:35,412 - --------------------

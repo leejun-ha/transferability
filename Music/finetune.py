@@ -56,7 +56,10 @@ def main():
     parser.add_argument('--postfix', type = str, default = '')
     
     parser.add_argument('--token_len', type = int, default = 128)
-    parser.add_argument('--ranking', type = str, default = '')
+    parser.add_argument('--ranking', type = str, default = None)
+    parser.add_argument('--oov', type = int, default = 0)
+    
+    
     args = vars(parser.parse_args())
 
     # remove "/" in model name
@@ -68,6 +71,7 @@ def main():
     ranking = args['ranking']
     if(args['ranking'] == None):
         args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
+        
     else:
         args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + ranking + '_256_token_mapping.pkl')
     
@@ -75,7 +79,10 @@ def main():
     
     if args['filename'] == None:
         if(args['ranking'] == None):
-            args['filename'] = f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}'
+            if(args['oov'] == 1):
+                args['filename'] = f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}_filtered'
+            else:
+                args['filename'] = f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}'
         else:
             args['filename'] = f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_{ranking}_tokenlen{token_len}'
     if args['shift']!=0:
@@ -115,10 +122,15 @@ def train(args):
     token_len = args['token_len']
     
     data_path = os.path.join(args['datadir'], model_replace )
-    data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_data.pkl'))
+    if(args['oov'] == 1):
+        data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_data_filtered.pkl'))
     #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
-    label = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_label.pkl'))
-
+        label = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_label_filtered.pkl'))
+    else:
+        data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_data.pkl'))
+    #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
+        label = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_label.pkl'))
+        
     dataset_train = torch.utils.data.TensorDataset(data, label) 
     collate_fn = None #dataset.collate_sequences if flag_rnn else None
     iterator_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, 

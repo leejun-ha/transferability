@@ -5,7 +5,7 @@ export USE_TORCH=1
 # microsoft/codebert-base neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # bertin-project/bertin-roberta-base-spanish"
 
-models="bert-base-multilingual-uncased"
+models="bert-base-uncased"
 
 epoch=15
 batch=16

@@ -16,7 +16,7 @@ logging.basicConfig(filename='token_analysis.log', level=logging.INFO,
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 # Load Wikipedia dataset
-wikipedia_dataset = load_dataset("wikipedia", "20200501.en", split='train')
+wikipedia_dataset = load_dataset("wikipedia", "20220301.en", split='train')
 
 # Function to create length bins
 def get_length_bin(length):

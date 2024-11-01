@@ -15,19 +15,26 @@ logging.basicConfig(filename='token_analysis_all_models.log', level=logging.INFO
                     format='%(asctime)s - %(message)s')
 
 models = [
-    "neulab/codebert-javascript",
-    "neulab/codebert-java",
-    "neulab/codebert-python",
-    "neulab/codebert-c"
+    "bert-base-uncased",
+    # "tohoku-nlp/bert-base-japanese"
+
 ]
 
 # Dataset mapping
 dataset_mapping = {
+   "bert-base-uncased": ("wikipedia", "20220301.en"),
+    "bert-base-chinese": ("wikipedia", "20220301.zh"),
+    "bert-base-multilingual-uncased": ("wikipedia", "20220301.en"),
+    "bert-base-multilingual-cased": ("wikipedia", "20220301.en"),
+    "bert-base-german-cased": ("wikipedia", "20200501.de"),
+    "neuralmind/bert-base-portuguese-cased": ("wikipedia", "20200501.pt"),
+    "tohoku-nlp/bert-base-japanese": ("wikipedia", "20200501.ja"),
+    "microsoft/codebert-base": ("code_search_net", "all"),
+    "microsoft/codebert-base-mlm": ("code_search_net", "all"),
     "neulab/codebert-javascript": ("code_search_net", "javascript"),
     "neulab/codebert-java": ("code_search_net", "java"),
     "neulab/codebert-python": ("code_search_net", "python"),
-    "neulab/codebert-c": ("code_search_net", "go")
-    # ... (other mappings)
+    "neulab/codebert-c": ("code_search_net", "go")  # Using Go as a proxy for C
 }
 
 def load_dataset_for_model(model_name):
@@ -84,13 +91,13 @@ def analyze_tokens_and_lengths(dataset, tokenizer):
 
     for item in tqdm(dataset, desc="Processing Items"):
         text = item[text_key]
-        tokens = tokenizer.tokenize(text)
+        tokens = tokenizer.encode(text, truncation=False, add_special_tokens=False)
         token_count = len(tokens)
         token_counts_per_sequence.append(token_count)
         input_token_lengths.append(token_count)
         total_tokens += token_count
         for token in tokens:
-            token_frequencies[token] += 1
+            token_frequencies[tokenizer.decode([token])] += 1
 
     average_token_count = np.mean(token_counts_per_sequence)
     return average_token_count, token_counts_per_sequence, token_frequencies, total_tokens, input_token_lengths
@@ -102,7 +109,7 @@ def save_token_counts_in_log(token_counts, filename, max_range=1000, increment=1
             f.write(f"Tokens {i}-{i + increment - 1}: {in_range_count}\n")
 
 def create_visualizations(token_counts_per_sequence, frequencies, input_token_lengths, model_name):
-    plt.figure(figsize=(20, 20))
+    plt.figure(figsize=(20, 25))
 
     plt.subplot(3, 2, 1)
     sns.histplot(data=[count for count in token_counts_per_sequence if count <= 1000], 
@@ -138,18 +145,17 @@ def create_visualizations(token_counts_per_sequence, frequencies, input_token_le
     plt.ylim(0, 1000)
 
     plt.subplot(3, 2, 5)
-    sns.histplot(data=[length for length in input_token_lengths if length <= 1000], 
-                 kde=True, bins=100)
-    plt.title(f"Distribution of Input Token Lengths (0-1000 range)\n{model_name}")
+    sns.histplot(data=input_token_lengths, kde=True, bins=100)
+    plt.title(f"Distribution of Input Token Lengths\n{model_name}")
     plt.xlabel("Number of Tokens")
     plt.ylabel("Frequency")
-    plt.xlim(0, 1000)
+    plt.xscale('log')
 
     plt.subplot(3, 2, 6)
-    sns.boxplot(y=[length for length in input_token_lengths if length <= 1000])
-    plt.title(f"Boxplot of Input Token Lengths (0-1000 range)\n{model_name}")
+    sns.boxplot(y=input_token_lengths)
+    plt.title(f"Boxplot of Input Token Lengths\n{model_name}")
     plt.ylabel("Number of Tokens")
-    plt.ylim(0, 1000)
+    plt.yscale('log')
 
     plt.tight_layout()
     plt.savefig(f'token_analysis_{model_name.replace("/", "_")}.png', dpi=300)
@@ -184,6 +190,19 @@ for model_name in models:
     logging.info(f"  Max: {np.max(input_token_lengths)}")
     logging.info(f"  25th percentile: {np.percentile(input_token_lengths, 25):.2f}")
     logging.info(f"  75th percentile: {np.percentile(input_token_lengths, 75):.2f}")
+    logging.info(f"  90th percentile: {np.percentile(input_token_lengths, 90):.2f}")
+    logging.info(f"  99th percentile: {np.percentile(input_token_lengths, 99):.2f}")
+
+    # Create a histogram of input token lengths
+    plt.figure(figsize=(12, 6))
+    sns.histplot(data=input_token_lengths, kde=True, bins=100)
+    plt.title(f"Distribution of Input Token Lengths - {model_name}")
+    plt.xlabel("Number of Tokens")
+    plt.ylabel("Frequency")
+    plt.xscale('log')
+    plt.savefig(f'input_token_length_distribution_{model_name.replace("/", "_")}.png', dpi=300)
+    plt.close()
+
 
     # Save token counts log
     save_token_counts_in_log(token_counts_per_sequence, f'token_counts_log_{model_name.replace("/", "_")}.txt')

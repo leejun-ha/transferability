@@ -123,9 +123,9 @@ def train(args):
     
     data_path = os.path.join(args['datadir'], model_replace )
     if(args['oov'] == 1):
-        data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_data_filtered.pkl'))
+        data = torch.load(os.path.join(data_path, f'{token_len}_train_data_filtered.pkl'))
     #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
-        label = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_label_filtered.pkl'))
+        label = torch.load(os.path.join(data_path, f'{token_len}_train_label_filtered.pkl'))
     else:
         data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_data.pkl'))
     #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))

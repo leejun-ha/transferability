@@ -5,6 +5,7 @@ import torch
 import numpy as np
 import argparse
 import os
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--task', type=str, default='maestro-v1')
@@ -16,9 +17,23 @@ parser.add_argument('--token_len', type=int, default=128)
 parser.add_argument('--json_file', type=str, default='maestro_v1_test_token_freq.json')
 args = parser.parse_args()
 
-import json
+def get_pitch(midi_data, token_len, tokens_to_remove):
+    note_list = []
+    instrument = midi_data.instruments
+    notes = instrument[0].notes
+    current_segment = []
 
-def load_and_process_frequency_data(json_file):
+    for note in notes:
+        if note.pitch not in tokens_to_remove:
+            current_segment.append(note.pitch)
+            
+            if len(current_segment) == token_len:
+                note_list.append(current_segment)
+                current_segment = []
+
+    return note_list
+
+def load_frequency_data(json_file):
     with open(json_file, 'r') as f:
         frequency_data = json.load(f)
     
@@ -35,20 +50,6 @@ def load_and_process_frequency_data(json_file):
 
     return tokens_to_remove
 
-def get_pitch(midi_data, token_len, tokens_to_remove):
-    note_list = []
-    instrument = midi_data.instruments
-    notes = instrument[0].notes
-    i = 0
-    
-    while (i+1)*token_len < len(notes):
-        note = sorted(notes[i*token_len:(i+1)*token_len], key=lambda x:x.start)
-        note = [n.pitch for n in note if n.pitch not in tokens_to_remove]
-        if len(note) == token_len:  # Only keep sequences with the full token length
-            note_list.append(note)
-        i += 1
-    return note_list
-
 csv = pd.read_csv(f'../data/maestro-v1.0.0/{args.task}.0.0.csv')
 
 composer = csv['canonical_composer']
@@ -64,7 +65,7 @@ for k in range(len(composer)):
 print("composer_num: ", idx)
 
 # Load and process the frequency data
-tokens_to_remove = load_and_process_frequency_data(args.json_file)
+tokens_to_remove = load_frequency_data(args.json_file)
 
 train_data = []
 train_label = []
@@ -96,8 +97,11 @@ train_t = (torch.Tensor(train_data)+128).long()
 dev_t = (torch.Tensor(dev_data)+128).long()
 test_t = (torch.Tensor(test_data)+128).long()
 
+
 model_process_path = f'../data/pkl'
 
+if not os.path.exists(model_process_path):
+    os.makedirs(model_process_path)
 
 torch.save(train_t, model_process_path + f'/{token_len}_train_data_filtered.pkl')
 torch.save(torch.LongTensor(train_label), model_process_path + f'/{token_len}_train_label_filtered.pkl')
@@ -106,3 +110,8 @@ torch.save(torch.LongTensor(dev_label), model_process_path + f'/{token_len}_dev_
 torch.save(test_t, model_process_path + f'/{token_len}_test_data_filtered.pkl')
 torch.save(torch.LongTensor(test_label), model_process_path + f'/{token_len}_test_label_filtered.pkl')
 torch.save(composer2id, model_process_path + f'/composer2id_map_filtered.pkl')
+
+print(f"Processed data shapes:")
+print(f"Train: {train_t.shape}")
+print(f"Dev: {dev_t.shape}")
+print(f"Test: {test_t.shape}")

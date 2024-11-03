@@ -30,7 +30,8 @@ parser.add_argument('--logdir', type = str, default = './log')
 parser.add_argument('--datadir', type = str)
 
 parser.add_argument('--token_len', type = int, default = 128)
-parser.add_argument('--ranking', type = str, default = '')
+parser.add_argument('--ranking', type = str, default = None)
+parser.add_argument('--oov', type = int, default = 0)
 
 args = vars(parser.parse_args())
 
@@ -90,7 +91,10 @@ config = transformers.AutoConfig.from_pretrained(model_name, num_labels = num_la
 model = transformers.AutoModelForSequenceClassification.from_config(config)#.to(device)
 if args['shift_table'] != '':
     if args['ranking'] == None :
-        state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
+        if( args['oov'] == 1):
+            state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_tokenlen{token_len}_filtered_table__{args["step"]}.pkl')
+        else:    
+            state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
     else:      
         state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_{args["ranking"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
 else:

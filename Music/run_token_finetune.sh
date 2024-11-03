@@ -8,7 +8,7 @@ export USE_TORCH=1
 
 model="bert-base-uncased"
 
-epoch=15
+epoch=30
 batch=16
 # token_lens="64 128 256 384 512"
 token_len="256"

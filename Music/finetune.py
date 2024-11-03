@@ -121,21 +121,24 @@ def train(args):
     gradient_accumulation = args['gradient_accumulation']
     token_len = args['token_len']
     
-    data_path = os.path.join(args['datadir'], model_replace )
+    
     if(args['oov'] == 1):
+        data_path = args['datadir']
         data = torch.load(os.path.join(data_path, f'{token_len}_train_data_filtered.pkl'))
     #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
         label = torch.load(os.path.join(data_path, f'{token_len}_train_label_filtered.pkl'))
+        composer2id = torch.load(os.path.join(data_path, 'composer2id_map_filtered.pkl'))
     else:
+        data_path = os.path.join(args['datadir'], model_replace )
         data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_data.pkl'))
     #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
         label = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_train_label.pkl'))
-        
+        composer2id = torch.load(os.path.join(data_path, 'composer2id_map.pkl'))
     dataset_train = torch.utils.data.TensorDataset(data, label) 
     collate_fn = None #dataset.collate_sequences if flag_rnn else None
     iterator_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, 
                                                  collate_fn=collate_fn, shuffle=True, pin_memory = True)
-    composer2id = torch.load(os.path.join(data_path, 'composer2id_map.pkl'))
+    
     num_labels = len(composer2id)
 
 

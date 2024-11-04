@@ -74,6 +74,16 @@ data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_{args["s
 #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
 label = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_{args["split"]}_label.pkl'))
 
+if(args['oov'] == 1):
+    no_oov_data = torch.load(os.path.join(args['datadir'], f'{token_len}_{args["split"]}_data_filtered.pkl'))
+    no_oov_label = torch.load(os.path.join(args['datadir'], f'{token_len}_{args["split"]}_label_filtered.pkl'))
+    
+    dataset_no_oov = torch.utils.data.TensorDataset(data, label) 
+
+    collate_fn_no_oov = None #dataset.collate_sequences if flag_rnn else None
+    iterator_no_oov = torch.utils.data.DataLoader(dataset_no_oov, batch_size=batch_size, 
+                                            collate_fn=collate_fn_no_oov, shuffle=False, pin_memory = True)
+    
 dataset_dev = torch.utils.data.TensorDataset(data, label) 
 # print(f"Num of Data: {len(dataset_dev)}")
 collate_fn = None #dataset.collate_sequences if flag_rnn else None
@@ -130,4 +140,26 @@ with torch.no_grad():
     #writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
     # writer.add_scalar(f'{args["split"]}_acc', dev_acc/label.shape[0], args['step'])
     # writer.close()
-    
+
+if(args['oov'] == 1):
+    with torch.no_grad():
+        no_oov_loss = 0
+        no_oov_acc = 0
+        for b, (input_ids, labels) in enumerate(tqdm(iterator_no_oov, total = len(iterator_no_oov))):
+            input_ids = input_ids.to(device)
+            if args['shift_table']!= '':
+                input_ids = shift_table(input_ids).long().squeeze()
+            #attention_mask = attention_mask.to(device)
+            labels = labels.to(device)
+
+            logits = model(input_ids = input_ids)
+            #loss = loss.mean()*input_ids.shape[0]
+            #dev_loss += loss.item()
+            ans = torch.mode(torch.argmax(logits[0], dim = -1))
+            ans = ans.values
+            no_oov_acc = no_oov_acc + torch.sum(torch.eq(ans, labels)).item()
+        #print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
+        print(f'no_oov_acc:{no_oov_acc/label.shape[0]}')
+        #writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
+        # writer.add_scalar(f'{args["split"]}_acc', dev_acc/label.shape[0], args['step'])
+        # writer.close()    

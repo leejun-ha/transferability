@@ -24,8 +24,13 @@ models = [
 languages = ['en', 'es', 'fr', 'de']
 
 def get_length_bin(length):
-    bins = [32, 64, 128, 256, 384, 512]
-    return min(bins, key=lambda x: abs(x - length))
+    if length <= 512:
+        bins = [32, 64, 128, 256, 384, 512]
+        return min(bins, key=lambda x: abs(x - length))
+    else:
+        truncated_length = length - 512
+        bins = [32, 64, 128, 256, 384, 512]
+        return min(bins, key=lambda x: abs(x - truncated_length))
 
 def create_stratified_sample(dataset, sample_ratio=0.01):
     sampled_indices = random.sample(range(len(dataset)), int(len(dataset) * sample_ratio))
@@ -38,6 +43,11 @@ def analyze_tokens(dataset, tokenizer):
     for article in tqdm(dataset, desc="Processing Articles"):
         tokens = tokenizer.tokenize(article['text'])
         token_count = len(tokens)
+        
+        if token_count > 512:
+            tokens = tokens[:512]
+            token_count = 512
+        
         token_counts_per_sequence.append(token_count)
         total_tokens += token_count
         for token in tokens:

@@ -20,29 +20,33 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # List of models and their corresponding datasets
 models = [
-    ("bert-base-uncased", "wikimedia/wikipedia", "20231101.en", "text"),
-    # ("bert-base-chinese", "wikimedia/wikipedia", "20231101.zh", "text"),
+    # ("bert-base-uncased", "wikimedia/wikipedia", "20231101.en", "text"),
+    ("bert-base-chinese", "wikimedia/wikipedia", "20231101.zh", "text"),
     # ("bert-base-multilingual-uncased", "wikimedia/wikipedia", "20231101.en", "text"),
     # ("bert-base-multilingual-cased", "wikimedia/wikipedia", "20231101.en", "text"),
-    # ("bert-base-german-cased", "wikimedia/wikipedia", "20231101.de", "text"),
-    # ("neuralmind/bert-base-portuguese-cased", "wikimedia/wikipedia", "20231101.pt", "text"),
-    # ("tohoku-nlp/bert-base-japanese", "wikimedia/wikipedia", "20231101.ja", "text"),
-    # ("microsoft/codebert-base-mlm", "code_search_net", "all", "whole_func_string"),
-    # ("neulab/codebert-javascript", "code_search_net", "javascript", "whole_func_string"),
-    # ("neulab/codebert-java", "code_search_net", "java", "whole_func_string"),
-    # ("neulab/codebert-python", "code_search_net", "python", "whole_func_string"),
-    # ("neulab/codebert-c", "code_search_net", "go", "whole_func_string")  # Using 'go' as a substitute for 'c'
+    ("bert-base-german-cased", "wikimedia/wikipedia", "20231101.de", "text"),
+    ("neuralmind/bert-base-portuguese-cased", "wikimedia/wikipedia", "20231101.pt", "text"),
+    ("tohoku-nlp/bert-base-japanese", "wikimedia/wikipedia", "20231101.ja", "text"),
+    ("microsoft/codebert-base-mlm", "code_search_net", "all", "whole_func_string"),
+    ("neulab/codebert-javascript", "code_search_net", "javascript", "whole_func_string"),
+    ("neulab/codebert-java", "code_search_net", "java", "whole_func_string"),
+    ("neulab/codebert-python", "code_search_net", "python", "whole_func_string"),
+    ("neulab/codebert-c", "code_search_net", "go", "whole_func_string")  # Using 'go' as a substitute for 'c'
 ]
 
 # Function to create length bins
 def get_length_bin(length):
-    bins = [32, 64, 128, 256, 384, 512]
-    return min(bins, key=lambda x: abs(x - length))
+    if length <= 512:
+        bins = [32, 64, 128, 256, 384, 512]
+        return min(bins, key=lambda x: abs(x - length))
+    else:
+        truncated_length = length - 512
+        bins = [32, 64, 128, 256, 384, 512]
+        return min(bins, key=lambda x: abs(x - truncated_length))
 
 def save_token_counts_in_ranges(token_counts, filename):
     bins = [32, 64, 128, 256, 384, 512]
     bin_counts = {bin: 0 for bin in bins}
-    
     for count in token_counts:
         nearest_bin = get_length_bin(count)
         bin_counts[nearest_bin] += 1
@@ -70,43 +74,33 @@ def analyze_tokens(dataset, tokenizer, text_field):
     token_counts_per_sequence = []
     total_tokens = 0
     token_frequencies = defaultdict(int)
-
+    
     for article in tqdm(dataset, desc="Processing Articles"):
         tokens = tokenizer.tokenize(article[text_field])
         token_count = len(tokens)
         token_counts_per_sequence.append(token_count)
+        
+        # Apply truncation if necessary
+        if token_count > 512:
+            tokens = tokens[:512]
+            token_count = 512
+        
         total_tokens += token_count
         for token in tokens:
             token_frequencies[token] += 1
-
+    
     average_token_count = np.mean(token_counts_per_sequence)
     return average_token_count, token_counts_per_sequence, token_frequencies, total_tokens
 
-# Function to save token counts in specified ranges
-def save_token_counts_in_ranges(token_counts, filename):
-    ranges = [
-        (0, 32), (32, 96), (96, 192), (192, 320), (320, 480),
-        (480, 672), (672, 896), (896, 1152), (1152, 1440), (1440, 1760)
-    ]
-    
-    with open(filename, 'w') as f:
-        for start, end in ranges:
-            in_range_count = sum(1 for count in token_counts if start < count <= end)
-            f.write(f"{start} < Tokens <= {end}: {in_range_count}\n")
-        
-        # Add a final range for tokens > 1760
-        above_max_count = sum(1 for count in token_counts if count > 1760)
-        f.write(f"Tokens > 1760: {above_max_count}\n")
 
 # Function to create visualizations
 def create_visualizations(token_counts_per_sequence, frequencies, model_name):
     plt.figure(figsize=(20, 15))
-
+    
     # Distribution of token counts per sequence in specified ranges
     plt.subplot(2, 2, 1)
     bins = [32, 64, 128, 256, 384, 512]
     bin_counts = {bin: 0 for bin in bins}
-    
     for count in token_counts_per_sequence:
         nearest_bin = get_length_bin(count)
         bin_counts[nearest_bin] += 1

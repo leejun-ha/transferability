@@ -14,7 +14,6 @@ import json
 
 from huggingface_hub import snapshot_download
 
-# os.environ['HF_TOKEN'] = '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'
 cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -172,8 +171,9 @@ for model_name, dataset_name, dataset_config, text_field in models:
     logging.info(f"Processing model: {model_name}")
     
     model_replace = model_name.replace("/", "_")
+    result_dir = model_replace + "_result"
     # Create output directory
-    os.makedirs(model_replace, exist_ok=True)
+    os.makedirs(result_dir, exist_ok=True)
     
     # Download the model files
     try:

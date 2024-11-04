@@ -4,6 +4,12 @@ from transformers import AutoTokenizer
 import torch.nn as nn
 import os
 
+from huggingface_hub import snapshot_download
+
+cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
+cache_dir = os.path.expanduser("~/.cache/huggingface/transformers")
+
+
 def create_token_mapping_shift_tables(tokenizer, frequencies, model_name, top_count, middle_count, low_count):
     vocab = tokenizer.get_vocab()
     vocab_size = len(vocab)
@@ -41,10 +47,10 @@ def create_token_mapping_shift_tables(tokenizer, frequencies, model_name, top_co
     low_embedding = create_mapping(low_tokens, low_count, is_top_or_low=True)
     
     model_replace = model_name.replace("/", "_")
-    os.makedirs('../shift_table', exist_ok=True)
-    torch.save(top_embedding, f'../shift_table/{model_replace}_top_256_token_mapping.pkl')
-    torch.save(middle_embedding, f'../shift_table/{model_replace}_middle_256_token_mapping.pkl')
-    torch.save(low_embedding, f'../shift_table/{model_replace}_low_256_token_mapping.pkl')
+    os.makedirs('../../shift_table', exist_ok=True)
+    torch.save(top_embedding, f'../../shift_table/{model_replace}_top_256_token_mapping.pkl')
+    torch.save(middle_embedding, f'../../shift_table/{model_replace}_middle_256_token_mapping.pkl')
+    torch.save(low_embedding, f'../../shift_table/{model_replace}_low_256_token_mapping.pkl')
     
     return top_embedding, middle_embedding, low_embedding
 
@@ -88,12 +94,21 @@ low_count = 256
 for model_name in models:
     print(f"Creating mapping pkl files for {model_name}")
     
+    # Download the model files
+    try:
+        model_path = snapshot_download(repo_id=model_name)
+    except Exception as e:
+        continue  # Skip to the next model if download fails
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir, use_fast=False, force_download=True)
+    except Exception as e:
+        print(f"Error loading tokenizer: {str(e)}")
     
     # Load frequency ranking
     model_replace = model_name.replace("/", "_")
-    with open(f'{model_replace}/token_frequency_ranking.json', 'r') as f:
+    result_dir = model_replace + "_result"
+    with open(f'{result_dir}/token_frequency_ranking.json', 'r') as f:
         frequencies = json.load(f)
     
     # Create and save token mapping shift tables
@@ -111,8 +126,8 @@ print("Mapping pkl files created for all models.")
 # After creating the mappings, inspect them
 for model_name in models:
     model_replace = model_name.replace("/", "_")
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    with open(f'{model_replace}/token_frequency_ranking.json', 'r') as f:
+    tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir, use_fast=False, force_download=True, local_files_only=False)
+    with open(f'{result_dir}/token_frequency_ranking.json', 'r') as f:
         frequencies = json.load(f)
     sorted_tokens = sorted(frequencies.items(), key=lambda x: x[1], reverse=True)
     
@@ -122,6 +137,6 @@ for model_name in models:
         ('middle', sorted_tokens[len(sorted_tokens)//2 - 128:len(sorted_tokens)//2 + 128], False), 
         ('low', sorted_tokens[-256:], True)
     ]:
-        file_path = f'shift_table/{model_replace}_{embedding_type}_256_token_mapping.pkl'
+        file_path = f'../../shift_table/{model_replace}_{embedding_type}_256_token_mapping.pkl'
         print(f"\n{embedding_type.capitalize()} 256 Token Mapping:")
         inspect_embedding(file_path, tokenizer, token_group, is_top_or_low)

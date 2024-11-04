@@ -3,7 +3,7 @@ export USE_TORCH=1
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
 # bert-base-german-cased neuralmind/bert-base-portuguese-cased 
 # tohoku-nlp/bert-base-japanese
-# microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
+# microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
 model="bert-base-uncased"

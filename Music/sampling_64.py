@@ -1,4 +1,4 @@
-from transformers import BertTokenizer
+from transformers import BertTokenizer, AutoTokenizer
 from datasets import load_dataset
 from collections import defaultdict
 import numpy as np
@@ -13,10 +13,13 @@ logging.basicConfig(filename='token_analysis_range.log', level=logging.INFO,
                     format='%(asctime)s - %(message)s')
 
 # Initialize the BERT tokenizer
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
+# tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+# tokenizer = AutoTokenizer.from_pretrained("microsoft/codebert-base-mlm")
+tokenizer = AutoTokenizer.from_pretrained("bert-base-german-cased")
 # Load Wikipedia dataset
-wikipedia_dataset = load_dataset("wikipedia", "20200501.en", split='train')
+# wikipedia_dataset = load_dataset("wikimedia/wikipedia", "20231101.en", split='train') 
+wikipedia_dataset = load_dataset("wikimedia/wikipedia", "20231101.de", split='train') 
+# wikipedia_dataset = load_dataset("code_search_net", "all", split='train') 
 
 # Function to create length bins
 def get_length_bin(length):
@@ -33,6 +36,7 @@ def get_length_bin(length):
 def create_stratified_sample(dataset, sample_ratio=0.01):
     bins = defaultdict(list)
     for i, article in enumerate(dataset):
+        # length_bin = get_length_bin(len(article['whole_func_string']))
         length_bin = get_length_bin(len(article['text']))
         bins[length_bin].append(i)
     
@@ -53,6 +57,7 @@ def analyze_tokens(dataset):
     token_frequencies = defaultdict(int)
 
     for article in tqdm(dataset, desc="Processing Articles"):
+        # tokens = tokenizer.tokenize(article['whole_func_string'])
         tokens = tokenizer.tokenize(article['text'])
         token_count = len(tokens)
         token_counts_per_sequence.append(token_count)
@@ -73,7 +78,7 @@ def save_token_counts_in_ranges(token_counts):
         (480, 672), (672, 896), (896, 1152), (1152, 1440), (1440, 1760)
     ]
     
-    with open('token_counts_ranges_64.txt', 'w') as f:
+    with open('token_counts_ranges_64_2.txt', 'w') as f:
         for start, end in ranges:
             in_range_count = sum(1 for count in token_counts if start < count <= end)
             f.write(f"{start} < Tokens <= {end}: {in_range_count}\n")
@@ -144,7 +149,7 @@ plt.ylabel("Number of Tokens")
 plt.yscale('log')  # Use log scale for y-axis to better show the distribution
 
 plt.tight_layout()
-plt.savefig('token_analysis_range.png', dpi=300)
+plt.savefig('token_analysis_range_2.png', dpi=300)
 plt.close()
 
 print("Analysis complete. Results logged to 'token_analysis.log' and visualizations saved to 'token_analysis.png'.")

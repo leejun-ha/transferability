@@ -56,15 +56,13 @@ def get_length_bin(length):
     else:
         return 3
 
-def create_stratified_sample(dataset, sample_ratio=0.01):
+def create_stratified_sample(dataset, sample_ratio=0.05, min_samples=1000):
     bins = defaultdict(list)
-    
-    text_key = next((key for key in dataset.features.keys() 
-                     if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string'), None)
+    text_key = next((key for key in dataset.features.keys() if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string'), None)
     
     if text_key is None:
         raise ValueError("Could not find a suitable text field in the dataset")
-
+    
     for i, item in enumerate(dataset):
         text = item[text_key]
         length_bin = get_length_bin(len(text))
@@ -75,6 +73,11 @@ def create_stratified_sample(dataset, sample_ratio=0.01):
         sample_size = max(int(len(bin_indices) * sample_ratio), 1)
         sampled_indices.extend(random.sample(bin_indices, sample_size))
     
+    # Ensure we have at least min_samples
+    if len(sampled_indices) < min_samples:
+        additional_samples = random.sample(range(len(dataset)), min_samples - len(sampled_indices))
+        sampled_indices.extend(additional_samples)
+    
     return dataset.select(sampled_indices)
 
 def analyze_tokens_and_lengths(dataset, tokenizer):
@@ -82,23 +85,27 @@ def analyze_tokens_and_lengths(dataset, tokenizer):
     input_token_lengths = []
     total_tokens = 0
     token_frequencies = defaultdict(int)
-
-    text_key = next((key for key in dataset.features.keys() 
-                     if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string'), None)
+    text_key = next((key for key in dataset.features.keys() if isinstance(dataset.features[key], Value) and dataset.features[key].dtype == 'string'), None)
     
     if text_key is None:
         raise ValueError("Could not find a suitable text field in the dataset")
-
+    
     for item in tqdm(dataset, desc="Processing Items"):
         text = item[text_key]
+        
+        # Tokenize the entire text without truncation
         tokens = tokenizer.encode(text, truncation=False, add_special_tokens=False)
         token_count = len(tokens)
+        
+        # Store the token count for this sequence
         token_counts_per_sequence.append(token_count)
         input_token_lengths.append(token_count)
         total_tokens += token_count
+        
+        # Update token frequencies
         for token in tokens:
             token_frequencies[tokenizer.decode([token])] += 1
-
+    
     average_token_count = np.mean(token_counts_per_sequence)
     return average_token_count, token_counts_per_sequence, token_frequencies, total_tokens, input_token_lengths
 

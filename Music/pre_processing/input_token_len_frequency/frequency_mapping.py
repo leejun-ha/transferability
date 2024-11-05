@@ -72,18 +72,18 @@ def inspect_embedding(file_path, tokenizer, token_group, is_top_or_low=False):
 
 # Usage
 models = [
-    "bert-base-uncased",
-    "bert-base-chinese",
+    # "bert-base-uncased",
+    # "bert-base-chinese",
     "bert-base-multilingual-uncased",
     "bert-base-multilingual-cased",
-    "bert-base-german-cased",
-    "neuralmind/bert-base-portuguese-cased",
-    "tohoku-nlp/bert-base-japanese",
-    "microsoft/codebert-base-mlm",
-    "neulab/codebert-javascript",
-    "neulab/codebert-java",
-    "neulab/codebert-python",
-    "neulab/codebert-c"
+    # "bert-base-german-cased",
+    # "neuralmind/bert-base-portuguese-cased",
+    # "tohoku-nlp/bert-base-japanese",
+    # "microsoft/codebert-base-mlm",
+    # "neulab/codebert-javascript",
+    # "neulab/codebert-java",
+    # "neulab/codebert-python",
+    # "neulab/codebert-c"
 ]
 
 # Fixed counts for top, middle, and low

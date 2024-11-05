@@ -57,7 +57,7 @@ def generate_and_save_plot(model_name, token_range_data, model_performance_data,
     ax1.set_xlim(0, 576)  # Extend a bit beyond 512 to show the last bar fully
 
     # Save the plot as PNG in the specified output directory
-    output_path = os.path.join(output_dir, f"{model_replace}_performance.png")
+    output_path = os.path.join(output_dir, f"{model_replace}_performance_even.png")
     plt.savefig(output_path, bbox_inches='tight')
     
     # Close the plot to avoid memory issues during multiple saves
@@ -67,8 +67,6 @@ def generate_and_save_plot(model_name, token_range_data, model_performance_data,
 models = [
     "bert-base-uncased",
     "bert-base-chinese",
-    "bert-base-multilingual-uncased",
-    "bert-base-multilingual-cased",
     "bert-base-german-cased",
     "neuralmind/bert-base-portuguese-cased",
     "tohoku-nlp/bert-base-japanese",

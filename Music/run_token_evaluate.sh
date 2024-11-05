@@ -4,11 +4,11 @@ task="maestro-v1"
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
 # bert-base-german-cased neuralmind/bert-base-portuguese-cased tohoku-nlp/bert-base-japanese
 # microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c"
-model="bert-base-multilingual-uncased"
-step="best"
+model="neuralmind/bert-base-portuguese-cased"
+step="3000"
 seed=2020
 batch=16
-token_lens="64 128 256 384 512"
+token_lens="512"
 # token_len="256"
 # rankings="top middle low"
 oov=0

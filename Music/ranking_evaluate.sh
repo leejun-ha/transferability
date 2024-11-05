@@ -6,7 +6,7 @@ task="maestro-v1"
 # microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c"
 # model="bert-base-uncased"
 models="neulab/codebert-python"
-step="best"
+step="9000"
 seed=2020
 batch=16
 token_len="256"

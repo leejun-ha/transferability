@@ -11,5 +11,5 @@ token_len="256"
 
 
 
-CUDA_VISIBLE_DEVICES=2 python oov_process.py \
+CUDA_VISIBLE_DEVICES=2 python oov_44version.py \
 	--token_len ${token_len}

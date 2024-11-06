@@ -1,13 +1,15 @@
 export USE_TORCH=1
-export CUDA_VISIBLE_DEVICES=0
-tasks="H3K9ac"
+export CUDA_VISIBLE_DEVICES=2
+tasks="H4"
 epoch="20"
 seed="2020"
-models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
-bert-base-german-cased wietsedv/bert-base-dutch-cased neuralmind/bert-base-portuguese-cased 
-aubmindlab/bert-base-arabert tohoku-nlp/bert-base-japanese kykim/bert-kor-base
-microsoft/codebert-base neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c"
+models="bert-base-uncased bert-base-chinese 
+bert-base-german-cased neuralmind/bert-base-portuguese-cased 
+tohoku-nlp/bert-base-japanese
+microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
+"
 # models="microsoft/codebert-base"
+ranking="top"
 
 for model in $models
 do
@@ -22,6 +24,8 @@ do
 			-e $epoch \
 			--save_step 5000 \
 			--n_gpu 1 \
-			--model ${model}
+			--model ${model}\
+			--shift_table ../Music/shift_table\
+			--ranking ${ranking}
 	done
 done

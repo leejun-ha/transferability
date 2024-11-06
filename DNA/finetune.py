@@ -38,10 +38,11 @@ def main():
     
     parser.add_argument('--datadir', type = str)
     parser.add_argument('--logdir', type = str, default = './log')
-    parser.add_argument('--savedir', type = str, default = './save_model')
+    parser.add_argument('--savedir', type = str, default = './pth')
     parser.add_argument('--save_step', type = int, default = 3000)
     parser.add_argument('--filename', type = str)
     parser.add_argument('--postfix', type = str, default = '')
+    parser.add_argument('--ranking', type = str, default = '')
     args = vars(parser.parse_args())
 
     if args['filename'] == None:
@@ -59,8 +60,10 @@ def main():
         os.makedirs(args['savedir'])
     if not os.path.exists(args['logdir']):
         os.makedirs(args['logdir'])
+    args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + args["ranking"] + '_256_token_mapping.pkl')
+    args['filename'] += args["ranking"]
     train(args = args)
-
+    
 def train(args):
         
     torch.backends.cudnn.benchmark = True

@@ -1,5 +1,5 @@
 export USE_TORCH=1
-task="H3"
+task="H3K9ac"
 models="bert-base-uncased bert-base-chinese 
 bert-base-german-cased neuralmind/bert-base-portuguese-cased 
 tohoku-nlp/bert-base-japanese

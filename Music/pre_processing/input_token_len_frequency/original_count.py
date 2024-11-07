@@ -118,7 +118,7 @@ for model_name, dataset_name, dataset_config, text_field in models:
         continue
 
     dataset = load_dataset(dataset_name, dataset_config, split='train')
-    sampled_dataset = create_sample(dataset, sample_ratio=0.01)  # 1% sample
+    sampled_dataset = create_sample(dataset, sample_ratio=0.1)  # 1% sample
 
     average_count, token_counts_per_sequence, token_counts_per_sequence_no_truncation, frequencies, total_tokens = analyze_tokens(sampled_dataset, tokenizer, text_field)
 

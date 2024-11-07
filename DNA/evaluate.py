@@ -28,6 +28,7 @@ parser.add_argument('--step', type = int)
 
 parser.add_argument('--logdir', type = str, default = './log')
 parser.add_argument('--datadir', type = str)
+parser.add_argument('--ranking', type = str, default = '')
 args = vars(parser.parse_args())
 
 #if args['filename'] == None:
@@ -48,6 +49,10 @@ batch_size = args['batch_size'] #2 devices
 model_replace = model_name
 model_replace = model_replace.replace("/", "_")
 print(model_replace)
+
+args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + args["ranking"] + '_256_token_mapping.pkl')
+args["state_dict"] += model_replace + "_" + "pretrain_seed" + str(args["seed"]) + "_table_" + args["ranking"] + "_" + str(args["step"]) + ".pkl"
+
 data_path = os.path.join(args['datadir'], args['task'])
 data = torch.load(os.path.join(data_path, f'{args["task"]}_{model_replace}_data.pkl'))
 attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{model_replace}_attention_mask.pkl'))

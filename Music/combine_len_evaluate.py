@@ -163,7 +163,7 @@ combined_accuracy = correct_count_sum / total_count_sum
 print(f'Combined accuracy: {combined_accuracy:.4f}')
 
 # Save all results to a text file
-txt_file_path = os.path.join(args['logdir'], f'accuracy_results_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}.txt')
+txt_file_path = os.path.join(args['logdir'], f'{model_replace}_accuracy_results_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}_tokenlen{args["token_len"]}.txt')
 save_accuracy_log(txt_file_path, combined_accuracy, total_count_sum, individual_results)
 
 print(f'Accuracy results saved to {txt_file_path}')

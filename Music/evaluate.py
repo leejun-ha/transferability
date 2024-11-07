@@ -137,6 +137,7 @@ with torch.no_grad():
         ans = ans.values
         dev_acc = dev_acc + torch.sum(torch.eq(ans, labels)).item()
     #print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
+    print(f"train_token_len:{token_len}")
     print(f"test_token_len:{test_token_len}")
     print(f'acc:{dev_acc/label.shape[0]}')
     #writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])

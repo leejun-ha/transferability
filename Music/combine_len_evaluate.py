@@ -102,29 +102,6 @@ def load_data(data_path, model_replace, split, test_token_len):
     
     return TensorDataset(data, label)
 
-# Load and combine datasets
-
-# data = torch.load(os.path.join(data_path, f'{model_replace}_{test_token_len}_{args["split"]}_data.pkl'))
-# #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
-# label = torch.load(os.path.join(data_path, f'{model_replace}_{test_token_len}_{args["split"]}_label.pkl'))
-
-# if(args['oov'] == 1):
-#     no_oov_data = torch.load(os.path.join(args['datadir'], f'{test_token_len}_{args["split"]}_data_filtered.pkl'))
-#     no_oov_label = torch.load(os.path.join(args['datadir'], f'{test_token_len}_{args["split"]}_label_filtered.pkl'))
-    
-#     dataset_no_oov = torch.utils.data.TensorDataset(data, label) 
-
-#     collate_fn_no_oov = None #dataset.collate_sequences if flag_rnn else None
-#     iterator_no_oov = torch.utils.data.DataLoader(dataset_no_oov, batch_size=batch_size, 
-#                                             collate_fn=collate_fn_no_oov, shuffle=False, pin_memory = True)
-    
-# dataset_dev = torch.utils.data.TensorDataset(data, label) 
-# print(f"Num of Data: {len(dataset_dev)}")
-
-# iterator_dev = zip(data, label) 
-#since here we use a list of songs, 
-#each song contain several segments of 128, use the first dim as batch to vote
-
 composer2id = torch.load(os.path.join(data_path, 'composer2id_map.pkl'))    
 num_labels = len(composer2id)
 
@@ -191,51 +168,3 @@ save_accuracy_log(txt_file_path, combined_accuracy, total_count_sum, individual_
 
 print(f'Accuracy results saved to {txt_file_path}')
     
-# model = model.eval()
-
-# with torch.no_grad():
-#     dev_loss = 0
-#     dev_acc = 0
-#     for b, (input_ids, labels) in enumerate(tqdm(iterator_dev, total = len(iterator_dev))):
-#         input_ids = input_ids.to(device)
-#         if args['shift_table']!= '':
-#             input_ids = shift_table(input_ids).long().squeeze()
-#         #attention_mask = attention_mask.to(device)
-#         labels = labels.to(device)
-
-#         logits = model(input_ids = input_ids)
-#         #loss = loss.mean()*input_ids.shape[0]
-#         #dev_loss += loss.item()
-#         ans = torch.mode(torch.argmax(logits[0], dim = -1))
-#         ans = ans.values
-#         dev_acc = dev_acc + torch.sum(torch.eq(ans, labels)).item()
-#     #print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
-#     print(f"train_token_len:{token_len}")
-#     print(f"test_token_len:{test_token_len}")
-#     print(f'acc:{dev_acc/label.shape[0]}')
-#     #writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
-#     # writer.add_scalar(f'{args["split"]}_acc', dev_acc/label.shape[0], args['step'])
-#     # writer.close()
-
-# if(args['oov'] == 1):
-#     with torch.no_grad():
-#         no_oov_loss = 0
-#         no_oov_acc = 0
-#         for b, (input_ids, labels) in enumerate(tqdm(iterator_no_oov, total = len(iterator_no_oov))):
-#             input_ids = input_ids.to(device)
-#             if args['shift_table']!= '':
-#                 input_ids = shift_table(input_ids).long().squeeze()
-#             #attention_mask = attention_mask.to(device)
-#             labels = labels.to(device)
-
-#             logits = model(input_ids = input_ids)
-#             #loss = loss.mean()*input_ids.shape[0]
-#             #dev_loss += loss.item()
-#             ans = torch.mode(torch.argmax(logits[0], dim = -1))
-#             ans = ans.values
-#             no_oov_acc = no_oov_acc + torch.sum(torch.eq(ans, labels)).item()
-#         #print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
-#         print(f'no_oov_acc:{no_oov_acc/label.shape[0]}')
-#         #writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
-#         # writer.add_scalar(f'{args["split"]}_acc', dev_acc/label.shape[0], args['step'])
-#         # writer.close()    

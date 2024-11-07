@@ -8,3 +8,8 @@
 /DNA/data
 /DNA/Hilbert-CNN/
 /DNA/pth
+
+# Protein Domain
+
+/Protein/data
+/Protein/preprocess_input

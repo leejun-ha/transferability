@@ -30,6 +30,7 @@ parser.add_argument('--logdir', type = str, default = './log')
 parser.add_argument('--datadir', type = str)
 
 parser.add_argument('--token_len', type = int, default = 128)
+parser.add_argument('--test_token_len', type = int, default = 128)
 parser.add_argument('--ranking', type = str, default = None)
 parser.add_argument('--oov', type = int, default = 0)
 
@@ -68,15 +69,15 @@ else:
     args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + ranking + '_256_token_mapping.pkl')
 
 token_len = args["token_len"]    
-
+test_token_len = args["test_token_len"]
 data_path = os.path.join(args['datadir'], model_replace)
-data = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_{args["split"]}_data.pkl'))
+data = torch.load(os.path.join(data_path, f'{model_replace}_{test_token_len}_{args["split"]}_data.pkl'))
 #attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{args["model"]}_attention_mask.pkl'))
-label = torch.load(os.path.join(data_path, f'{model_replace}_{token_len}_{args["split"]}_label.pkl'))
+label = torch.load(os.path.join(data_path, f'{model_replace}_{test_token_len}_{args["split"]}_label.pkl'))
 
 if(args['oov'] == 1):
-    no_oov_data = torch.load(os.path.join(args['datadir'], f'{token_len}_{args["split"]}_data_filtered.pkl'))
-    no_oov_label = torch.load(os.path.join(args['datadir'], f'{token_len}_{args["split"]}_label_filtered.pkl'))
+    no_oov_data = torch.load(os.path.join(args['datadir'], f'{test_token_len}_{args["split"]}_data_filtered.pkl'))
+    no_oov_label = torch.load(os.path.join(args['datadir'], f'{test_token_len}_{args["split"]}_label_filtered.pkl'))
     
     dataset_no_oov = torch.utils.data.TensorDataset(data, label) 
 
@@ -136,6 +137,7 @@ with torch.no_grad():
         ans = ans.values
         dev_acc = dev_acc + torch.sum(torch.eq(ans, labels)).item()
     #print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
+    print(f"test_token_len:{test_token_len}")
     print(f'acc:{dev_acc/label.shape[0]}')
     #writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
     # writer.add_scalar(f'{args["split"]}_acc', dev_acc/label.shape[0], args['step'])

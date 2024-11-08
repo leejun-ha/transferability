@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Step 1: Read data from the text file (paste-2.txt)
+# Step 1: Read data from the text file
 data = {}
 with open('/home/junha/transferability/Music/pre_processing/input_token_len_frequency/neulab_codebert-c_result/token_counts_original.txt.txt', 'r') as file:
     for line in file:

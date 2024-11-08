@@ -2,23 +2,22 @@ export USE_TORCH=1
 
 task="maestro-v1"
 
-# models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
+# models="bert-base-uncased bert-base-chinese
 # bert-base-german-cased neuralmind/bert-base-portuguese-cased 
 # tohoku-nlp/bert-base-japanese
 # microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
-models="neulab/codebert-java"
+models="FacebookAI/roberta-base"
 
 # model="bert-base-multilingual-cased"
 step="best"
 seed=2020
 batch=16
-token_lens="64 128 256 384 512"
-# token_len="256"
+# token_lens="64 128 256 384 512"
+test_token_lens="128"
 # test_token_lens="64 128 256 384 512"
-
-
+oov="2"
 for model in $models
 do
     for token_len in $token_lens
@@ -37,6 +36,7 @@ do
             --datadir ./data/pkl \
             --shift_table ./shift_table \
             --token_len ${token_len} \
+            --oov ${oov}
 
     done
 done

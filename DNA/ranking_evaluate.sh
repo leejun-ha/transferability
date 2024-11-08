@@ -12,7 +12,7 @@ seed=2020
 split="test"
 # model="microsoft/codebert-base-mlm"
 # model_state="microsoft_codebert-base-mlm"
-ranking="middle"
+ranking="low"
 
 for model in $models
 do

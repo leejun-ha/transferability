@@ -31,7 +31,6 @@ do
             --type pretrain \
             --model ${model} \
             --seed ${seed} \
-            --logdir ./log/$task \
             --state_dict ./pth/save_model \
             --datadir ./data/pkl \
             --shift_table ./shift_table \

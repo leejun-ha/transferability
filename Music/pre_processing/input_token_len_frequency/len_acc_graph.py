@@ -59,8 +59,6 @@ def generate_and_save_plot(model_name, token_range_data, model_performance_data,
 models = [
     "bert-base-uncased",
     "bert-base-chinese",
-    "bert-base-multilingual-uncased",
-    "bert-base-multilingual-cased",
     "bert-base-german-cased",
     "neuralmind/bert-base-portuguese-cased",
     "tohoku-nlp/bert-base-japanese",

@@ -101,7 +101,7 @@ for i, model in enumerate(models):
 
 # Adjust layout and save the final figure as an image file
 plt.tight_layout()
-plt.savefig('token_count_vs_performance2.png', dpi=300, bbox_inches='tight')
+plt.savefig('token_original_count_vs_performance_average.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-print("Graph saved as 'token_count_vs_performance2.png'")
+print("Graph saved as 'token_count_vs_performance.png'")

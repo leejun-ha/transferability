@@ -8,16 +8,15 @@ task="maestro-v1"
 # microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
-models="FacebookAI/roberta-base"
+models="microsoft/codebert-base-mlm neulab/codebert-java tohoku-nlp/bert-base-japanese"
 
 # model="bert-base-multilingual-cased"
 step="best"
 seed=2020
 batch=16
-# token_lens="64 128 256 384 512"
-test_token_lens="128"
-# test_token_lens="64 128 256 384 512"
-oov="2"
+token_lens="64 128 256 384 512"
+
+oov="0"
 for model in $models
 do
     for token_len in $token_lens

@@ -8,6 +8,12 @@ def read_combined_accuracy(file_path):
                 return float(line.split(':')[-1].strip())
     return None
 
+def read_average_accuracy(file_path):
+    with open(file_path, 'r') as file:
+        for line in file:
+            if 'Average accuracy:' in line:
+                return float(line.split(':')[-1].strip())
+    return None
 # Define the models and token lengths
 models = [
     'bert-base-uncased',
@@ -35,7 +41,8 @@ for model in models:
         # Construct the filename
         file_name = f'acc/{model.replace("/", "_")}_accuracy_results_test_maestro-v1_pretrain_seed2020_tokenlen{length}.txt'
         if os.path.exists(file_name):
-            combined_accuracy = read_combined_accuracy(file_name)
+            # combined_accuracy = read_combined_accuracy(file_name)
+            combined_accuracy = read_average_accuracy(file_name)
             if combined_accuracy is not None:
                 model_performance[str(length)] = combined_accuracy
 

@@ -152,29 +152,37 @@ def evaluate(model, data_loader):
     
     return total_acc, total_samples
 
-def sample_indices(dataset_size, num_samples, seed):
+def sample_indices(dataset, num_samples, seed):
     rng = np.random.default_rng(seed)
-    return rng.choice(dataset_size, size=num_samples, replace=False)
+    indices = np.arange(len(dataset))
+    return rng.choice(indices, size=num_samples, replace=False)
 
-# Load all datasets
+# Load all datasets and find the minimum size
 datasets = {}
+min_size = float('inf')
 for test_token_len in test_token_lengths:
     dataset = load_data(data_path, model_replace, args['split'], test_token_len)
     datasets[test_token_len] = dataset
+    min_size = min(min_size, len(dataset))
 
-# Get the size of the 512 token_len dataset
-sample_size = len(datasets[512])
-print(f"Sampling {sample_size} data points from each dataset based on the 512 token_len dataset size.")
+print(f"Sampling {min_size} data points from each dataset based on the smallest dataset size.")
 
 # Sample equal number of data points from each dataset
 sampled_datasets = {}
 for test_token_len, dataset in datasets.items():
-    if len(dataset) < sample_size:
-        print(f"Warning: Dataset for token_len {test_token_len} has fewer than {sample_size} samples. Using all available data.")
+    if len(dataset) <= min_size:
+        print(f"Using all {len(dataset)} samples for token_len {test_token_len}.")
         sampled_datasets[test_token_len] = dataset
     else:
-        indices = sample_indices(len(dataset), sample_size, sampling_seed)
+        indices = sample_indices(dataset, min_size, sampling_seed)
         sampled_datasets[test_token_len] = Subset(dataset, indices)
+
+    # Verify the sampled dataset
+    sampled_data, sampled_labels = sampled_datasets[test_token_len][:]
+    print(f"Sampled dataset for token_len {test_token_len}:")
+    print(f"  Data shape: {sampled_data.shape}")
+    print(f"  Labels shape: {sampled_labels.shape}")
+    print(f"  Unique labels: {torch.unique(sampled_labels).tolist()}")
 
 # Evaluate on individual test_token_len datasets
 individual_results = {}

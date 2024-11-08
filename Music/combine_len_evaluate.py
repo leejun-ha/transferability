@@ -150,24 +150,46 @@ def evaluate(model, data_loader):
 
 # Evaluate on individual test_token_len datasets
 individual_results = {}
+individual_accuracies = []
 for test_token_len in test_token_lengths:
     print(f"Evaluating on test_token_len {test_token_len}...")
     dataset = load_data(data_path, model_replace, args['split'], test_token_len)
     iterator = DataLoader(dataset, batch_size=args['batch_size'], shuffle=False, pin_memory=True)
     correct, total = evaluate(model, iterator)
     individual_results[test_token_len] = (correct, total)
-    print(f'Accuracy for test_token_len {test_token_len}: {correct/total:.4f}')
+    accuracy = correct / total
+    individual_accuracies.append(accuracy)
+    print(f'Accuracy for test_token_len {test_token_len}: {accuracy:.4f}')
 
 # Calculate combined accuracy
 correct_count_sum = sum(correct for correct, _ in individual_results.values())
 total_count_sum = sum(total for _, total in individual_results.values())
 combined_accuracy = correct_count_sum / total_count_sum
 
+# Calculate average accuracy
+average_accuracy = sum(individual_accuracies) / len(individual_accuracies)
+
 print(f'Combined accuracy: {combined_accuracy:.4f}')
+print(f'Average accuracy: {average_accuracy:.4f}')
+
+# Update the save_accuracy_log function to include average accuracy
+def save_accuracy_log(file_path, combined_acc, average_acc, total_samples, individual_results):
+    with open(file_path, 'w') as f:
+        f.write(f'Evaluation results:\n\n')
+        f.write(f'Combined dataset results:\n')
+        f.write(f'Total samples: {total_samples}\n')
+        f.write(f'Combined accuracy: {combined_acc:.4f}\n')
+        f.write(f'Average accuracy: {average_acc:.4f}\n\n')
+        f.write(f'Individual test_token_len results:\n')
+        for test_token_len, (correct, total) in individual_results.items():
+            acc = correct / total
+            f.write(f'test_token_len {test_token_len}:\n')
+            f.write(f'  Samples: {total}\n')
+            f.write(f'  Correct: {correct}\n')
+            f.write(f'  Accuracy: {acc:.4f}\n\n')
 
 # Save all results to a text file
 txt_file_path = os.path.join(args['logdir'], f'{model_replace}_accuracy_results_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}_tokenlen{args["token_len"]}.txt')
-save_accuracy_log(txt_file_path, combined_accuracy, total_count_sum, individual_results)
+save_accuracy_log(txt_file_path, combined_accuracy, average_accuracy, total_count_sum, individual_results)
 
 print(f'Accuracy results saved to {txt_file_path}')
-    

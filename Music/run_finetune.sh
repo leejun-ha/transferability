@@ -9,16 +9,18 @@ models="bert-base-uncased"
 
 epoch=15
 batch=16
-token_len=384
+token_len=128
+oov=2
 
 for model in $models
 do
-    CUDA_VISIBLE_DEVICES=3 python finetune.py \
+    CUDA_VISIBLE_DEVICES=0 python finetune.py \
         --model ${model}  \
-        --type pretrain \
+        --type scratch \
         -e ${epoch} \
         -b ${batch} \
         --token_len ${token_len} \
-        --shift_table ./shift_table
+        --oov ${oov}
+        # --shift_table ./shift_table
 
 done

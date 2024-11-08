@@ -69,8 +69,13 @@ def main():
     
     token_len = args['token_len']
     ranking = args['ranking']
+    
     if(args['ranking'] == None):
-        args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
+        if(args['oov'] == 2):
+            args["shift_table"] = ''
+        else:
+            args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
+        
         
     else:
         args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + ranking + '_256_token_mapping.pkl')

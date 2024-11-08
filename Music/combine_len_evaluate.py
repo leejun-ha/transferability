@@ -117,7 +117,7 @@ if args['shift_table'] != '':
         state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_{args["ranking"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
 else:
     state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_{args["step"]}.pkl')
-model.load_state_dict(torch.load(state_dict_path))
+model.load_state_dict(torch.load(state_dict_path), strict=False)
 model.cuda()
 #model = torch.nn.DataParallel(model)
 if args['shift_table'] != '':

@@ -8,8 +8,7 @@ task="maestro-v1"
 # microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
-models="tohoku-nlp/bert-base-japanese microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java
-"
+models="neulab/codebert-java"
 
 # model="bert-base-multilingual-cased"
 step="best"

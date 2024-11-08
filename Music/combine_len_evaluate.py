@@ -44,7 +44,7 @@ parser.add_argument('--batch_size', '-b', type = int, default = 16)
 parser.add_argument('--shift_table', type = str, default = '')
 parser.add_argument('--step', type = str)
 
-parser.add_argument('--logdir', type = str, default = './log')
+parser.add_argument('--logdir', type = str, default = '/home/junha/transferability/Music/pre_processing/input_token_len_frequency/acc')
 parser.add_argument('--datadir', type = str)
 
 parser.add_argument('--token_len', type = int, default = 128)

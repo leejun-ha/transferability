@@ -64,7 +64,10 @@ print(model_replace)
 ranking = args["ranking"]
 
 if(args["ranking"] == None):
-    args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
+    if(args["oov"] == 2):
+        args["shift_table"] = ""
+    else:
+        args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
 else:
     args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + ranking + '_256_token_mapping.pkl')
 
@@ -103,13 +106,13 @@ model = transformers.AutoModelForSequenceClassification.from_config(config)#.to(
 if args['shift_table'] != '':
     if args['ranking'] == None :
         if( args['oov'] == 1):
-            state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_tokenlen{token_len}_filtered_table__{args["step"]}.pkl')
+            state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}_filtered_table__{args["step"]}.pkl')
         else:    
-            state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
+            state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
     else:      
-        state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_{args["ranking"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
+        state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_{args["ranking"]}_tokenlen{token_len}_table__{args["step"]}.pkl')
 else:
-    state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_pretrain_seed{args["seed"]}_{args["step"]}.pkl')
+    state_dict_path = os.path.join(args["state_dict"], model_replace, f'{args["batch_size"]}_{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}_tokenlen{token_len}_{args["step"]}.pkl')
 model.load_state_dict(torch.load(state_dict_path))
 model.cuda()
 #model = torch.nn.DataParallel(model)

@@ -16,11 +16,6 @@ total_tokens = len(frequencies)
 top_10_index = int(total_tokens * 0.1)
 bottom_10_index = int(total_tokens * 0.9)
 
-# Split the frequencies into three groups
-top_10_percent = frequencies[:top_10_index]
-middle_80_percent = frequencies[top_10_index:bottom_10_index]
-bottom_10_percent = frequencies[bottom_10_index:]
-
 # Create the plot
 plt.figure(figsize=(12, 6))
 
@@ -48,6 +43,8 @@ plt.text(total_tokens * 0.05, max(frequencies), 'Top 10%', verticalalignment='to
 plt.text(total_tokens * 0.5, np.median(frequencies), 'Middle 80%', verticalalignment='center')
 plt.text(total_tokens * 0.95, min(frequencies), 'Bottom 10%', verticalalignment='bottom', horizontalalignment='right')
 
+# Save the plot as a PNG file
+plt.savefig('token_frequency_distribution.png', dpi=300, bbox_inches='tight')
+
 # Show the plot
-plt.tight_layout()
 plt.show()

@@ -4,14 +4,14 @@ task="maestro-v1"
 # models="bert-base-uncased bert-base-chinese bert-base-multilingual-uncased bert-base-multilingual-cased 
 # bert-base-german-cased neuralmind/bert-base-portuguese-cased tohoku-nlp/bert-base-japanese
 # microsoft/codebert-base microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c"
-model="neuralmind/bert-base-portuguese-cased"
-step="3000"
+model="FacebookAI/roberta-base"
+step="best"
 seed=2020
 batch=16
-token_lens="512"
+token_lens="64 128 256 384 512"
 # token_len="256"
 # rankings="top middle low"
-oov=0
+oov=2
 # for ranking in $rankings
 # do
 #     CUDA_VISIBLE_DEVICES=2 python evaluate.py --task $task \
@@ -34,11 +34,11 @@ oov=0
 
 for token_len in $token_lens
 do
-CUDA_VISIBLE_DEVICES=2 python evaluate.py --task $task \
+CUDA_VISIBLE_DEVICES=3 python evaluate.py --task $task \
     --split test \
     --step ${step} \
     -b ${batch} \
-    --type pretrain \
+    --type scratch \
     --model ${model} \
     --seed ${seed} \
     --logdir ./log/$task \

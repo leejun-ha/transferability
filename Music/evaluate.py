@@ -66,6 +66,7 @@ ranking = args["ranking"]
 if(args["ranking"] == None):
     if(args["oov"] == 2):
         args["shift_table"] = ""
+        args["test_token_len"] = args["token_len"]
     else:
         args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_bert_token_mapping.pkl')
 else:

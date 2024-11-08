@@ -30,7 +30,7 @@ parser.add_argument('--logdir', type = str, default = './log')
 parser.add_argument('--datadir', type = str)
 
 parser.add_argument('--token_len', type = int, default = 128)
-parser.add_argument('--test_token_len', type = int, default = 128)
+parser.add_argument('--test_token_len', type = int, default = 256)
 parser.add_argument('--ranking', type = str, default = None)
 parser.add_argument('--oov', type = int, default = 0)
 

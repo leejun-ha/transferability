@@ -36,7 +36,7 @@ models = [
 
 # Create a figure with subplots for each model
 fig, axs = plt.subplots(5, 2, figsize=(20, 30))
-fig.suptitle("Token Count Distribution vs Fine-tuning Performance", fontsize=16)
+fig.suptitle("", fontsize=16)
 
 # Set common y-axis limits for token counts and performance
 common_y_count_min = 1e0  # Minimum count (log scale)

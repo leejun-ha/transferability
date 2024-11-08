@@ -2,13 +2,13 @@ export USE_TORCH=1
 
 task="maestro-v1"
 
-# models="bert-base-uncased bert-base-chinese
-# bert-base-german-cased neuralmind/bert-base-portuguese-cased 
-# tohoku-nlp/bert-base-japanese
-# microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
-# "
+models="bert-base-uncased bert-base-chinese
+bert-base-german-cased neuralmind/bert-base-portuguese-cased 
+tohoku-nlp/bert-base-japanese
+microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
+"
 
-models="microsoft/codebert-base-mlm neulab/codebert-java tohoku-nlp/bert-base-japanese"
+# models="microsoft/codebert-base-mlm neulab/codebert-java tohoku-nlp/bert-base-japanese"
 
 # model="bert-base-multilingual-cased"
 step="best"

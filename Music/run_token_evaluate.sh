@@ -38,7 +38,7 @@ CUDA_VISIBLE_DEVICES=3 python evaluate.py --task $task \
     --split test \
     --step ${step} \
     -b ${batch} \
-    --type scratch \
+    --type pretrain \
     --model ${model} \
     --seed ${seed} \
     --logdir ./log/$task \

@@ -6,7 +6,7 @@ export USE_TORCH=1
 # microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
 
-model="bert-base-uncased"
+model="FacebookAI/roberta-base"
 
 epoch=15
 batch=16
@@ -20,7 +20,7 @@ for token_len in $token_lens
 do
     CUDA_VISIBLE_DEVICES=0 python finetune.py \
         --model ${model}  \
-        --type scratch \
+        --type pretrain \
         -e ${epoch} \
         -b ${batch} \
         --token_len ${token_len} \

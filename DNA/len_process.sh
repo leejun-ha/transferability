@@ -10,7 +10,7 @@ microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neul
 
 for model in $models
 do
-	python len_preprocess.py --task $task \
+	python per_len_preprocess.py --task $task \
 		--model ${model} \
 
 done

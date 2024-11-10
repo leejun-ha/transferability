@@ -79,3 +79,54 @@ BertForSequenceClassification(
   (classifier): Linear(in_features=768, out_features=10, bias=True)
 )
 2024-11-10 21:21:55,805 - INFO - Starting epoch 1/30
+2024-11-10 21:24:08,817 - INFO - Step 50: Average loss = 2.0579
+2024-11-10 21:25:20,724 - INFO - Training arguments: {'task': 'localization', 'model': 'bert-base-uncased', 'type': 'scratch', 'seed': 2020, 'gradient_accumulation': 2, 'batch_size': 64, 'epoch': 30, 'warmup_step': 0, 'lr': 1e-05, 'shift': 0, 'shift_table': '', 'rand_embed': False, 'n_gpu': 1, 'ckpt': '', 'logdir': './log/localization', 'savedir': './pth', 'save_step': 3000, 'filename': None, 'postfix': '', 'ranking': '', 'input_lengths': [64, 128, 256, 384, 512], 'log_file': 'training_log.txt'}
+2024-11-10 21:25:21,579 - INFO - Note: NumExpr detected 64 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-11-10 21:25:21,579 - INFO - NumExpr defaulting to 8 threads.
+2024-11-10 21:25:22,542 - INFO - Starting epoch 2/30
+2024-11-10 21:25:28,138 - INFO - Model architecture:
+BertForSequenceClassification(
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=10, bias=True)
+)
+2024-11-10 21:25:28,138 - INFO - Starting epoch 1/30

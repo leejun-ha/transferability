@@ -21,13 +21,18 @@ data_path = os.path.join(args.save_dir, args.task)
 if not os.path.exists(data_path):
     os.makedirs(data_path)
 
-dna_vocab = {'A': 1, 'T': 2, 'C': 3, 'G': 4}
+dna_vocab = {'A': 1, 'T': 2, 'C': 3, 'G': 4, '[PAD]': 0, '[CLS]': 5, '[SEP]': 6}
 
 def tokenize_dna(seq):
     return [dna_vocab[base] for base in seq if base in dna_vocab]
 
-def pad_sequence(seq, max_length):
-    return seq[:max_length] + [4] * (max_length - len(seq))  # 4 as padding token
+def process_sequence(seq, max_length):
+    tokens = tokenize_dna(seq)
+    tokens = [dna_vocab['[CLS]']] + tokens[:max_length-2] + [dna_vocab['[SEP]']]
+    padding_length = max_length - len(tokens)
+    tokens += [dna_vocab['[PAD]']] * padding_length
+    attention_mask = [1] * (len(tokens) - padding_length) + [0] * padding_length
+    return tokens, attention_mask
 
 if not 'albert' in args.model:
     tokenizer = transformers.AutoTokenizer.from_pretrained(args.model)
@@ -48,13 +53,12 @@ def process_data(input_length):
                 seq = text[i+1].strip().upper()
                 label_value = int(text[i+2])
                 
-                tokens = tokenize_dna(seq)
-                seq_chunks = [tokens[j:j+input_length] for j in range(0, len(tokens), input_length)]
+                seq_chunks = [seq[j:j+input_length-2] for j in range(0, len(seq), input_length-2)]
                 
                 for chunk in seq_chunks:
-                    padded_chunk = pad_sequence(chunk, input_length)
-                    data.append(padded_chunk)
-                    attention_mask.append([1] * len(chunk) + [0] * (input_length - len(chunk)))
+                    tokens, mask = process_sequence(chunk, input_length)
+                    data.append(tokens)
+                    attention_mask.append(mask)
                     label.append(label_value)
 
     all_feature = list(zip(data, attention_mask, label))

@@ -11,7 +11,7 @@ def read_token_counts(filename):
     with open(filename, 'r') as f:
         for line in tqdm(f, desc="Reading Token Counts", unit=" lines"):
             length, count = map(int, line.strip().split(': '))
-            if 0 <= length <= 1024:  # Limit to token lengths between 0 and 1024
+            if 0 <= length <= 512:  # Limit to token lengths between 0 and 512
                 token_counts[length] += count
     return token_counts
 
@@ -101,7 +101,7 @@ for i, model in enumerate(models):
 
 # Adjust layout and save the final figure as an image file
 plt.tight_layout()
-plt.savefig('token_original_count_vs_performance_average.png', dpi=300, bbox_inches='tight')
+plt.savefig('token_original_count_vs_performance_average_512.png', dpi=300, bbox_inches='tight')
 plt.close()
 
 print("Graph saved as 'token_count_vs_performance.png'")

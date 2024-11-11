@@ -96,8 +96,8 @@ for testlen in test_lens:
     if args['shift_table'] != '':
         shift_table = torch.load(args['shift_table']).cuda()
 
-    writer = tensorboardX.SummaryWriter(log_dir=args['logdir'], 
-                                        filename_suffix=f'_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}')
+    # writer = tensorboardX.SummaryWriter(log_dir=args['logdir'], 
+    #                                     filename_suffix=f'_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}')
     model = model.eval()
 
     def log_evaluation_results(total_samples, average_accuracy, individual_results):
@@ -138,7 +138,7 @@ for testlen in test_lens:
             ans = torch.argmax(logits, dim = -1)
             dev_acc = dev_acc + torch.sum(torch.eq(ans, labels)).item()
         print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
-        writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
-        writer.add_scalar(f'{args["split"]}_acc', dev_acc/len(dataset_dev), args['step'])
-        writer.close()
+        # writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
+        # writer.add_scalar(f'{args["split"]}_acc', dev_acc/len(dataset_dev), args['step'])
+        # writer.close()
     

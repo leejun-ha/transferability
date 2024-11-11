@@ -121,9 +121,12 @@ class Seq_dataset(torch.utils.data.Dataset):
             return (*instance_seq, *instance_label)
     
     def check_cached(self, split):
-        input_ids_path = os.path.join(self.cache_dir, f'cached_{split}_input_ids_{self.args["task"]}_{self.args["model"]}_512.pkl')
-        token_type_ids_path = os.path.join(self.cache_dir, f'cached_{split}_token_type_{self.args["task"]}_{self.args["model"]}_512.pkl')
-        attention_mask_path = os.path.join(self.cache_dir, f'cached_{split}_att_mask_{self.args["task"]}_{self.args["model"]}_512.pkl')
+        input_ids_path = os.path.join(self.cache_dir, f'cached_{split}_input_ids_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
+        token_type_ids_path = os.path.join(self.cache_dir, f'cached_{split}_token_type_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
+        attention_mask_path = os.path.join(self.cache_dir, f'cached_{split}_att_mask_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
+        print(input_ids_path)
+        print(token_type_ids_path)
+        print(attention_mask_path)
         load_input = 0
         load_token_type = 0
         load_att_mask = 0

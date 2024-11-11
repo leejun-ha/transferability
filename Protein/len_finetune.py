@@ -47,17 +47,17 @@ def main():
 
     # Log the arguments
     logging.info(f"Training arguments: {args}")
-
+    model_name = args["model"]
+    model_replace = model_name.replace("/", "_")
     if args['filename'] == None:
-        args['filename'] = f'{args["task"]}_{args["model"]}_{args["type"]}_seed{args["seed"]}'
+        args['filename'] = f'{args["task"]}_{model_replace}_{args["type"]}_seed{args["seed"]}'
     if args['shift']!=0:
         args['filename'] += f'_shift{args["shift"]}'
     if args['shift_table']!='':
         args['filename'] += '_table_'
     args['filename'] += args['postfix']
     print(args)
-    model_name = args["model"]
-    model_replace = model_name.replace("/", "_")
+    
     # args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + args["ranking"] + '_256_token_mapping.pkl')
     args['filename'] += args["ranking"]
     

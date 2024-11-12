@@ -1,5 +1,5 @@
 export USE_TORCH=1
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=3
 tasks="H4"
 epoch="20"
 seed="2020"

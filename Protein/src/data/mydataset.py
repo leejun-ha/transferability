@@ -83,6 +83,156 @@ class PairedHomology_dataset(torch.utils.data.Dataset):
         self.augment = augment
 
 
+# class Seq_dataset(torch.utils.data.Dataset):
+#     """ Pytorch dataloader for PLUS single sequence task training and evaluation """
+#     def __init__(self, sequences, labels, encoder, tokenizer, args, max_len=None, truncate=True, cache_dir = None, split = 'train'):
+#         self.sequences = sequences
+#         self.labels = labels
+#         self.valids = None
+#         self.num_alphabets = len(encoder)
+#         self.tokenizer = tokenizer
+#         #self.cfg = cfg
+#         #self.rnn = rnn
+#         self.truncate = truncate
+#         self.augment = 0.0
+#         self.args = args
+#         self.cache_dir = cache_dir
+#         self.split = split
+#         #if not self.rnn: self.set_max_len(max_len)
+#         self.set_max_len(max_len)
+#         self.cached = self.check_cached(split = split)
+
+#     def __len__(self):
+#         return len(self.sequences)
+
+#     def __getitem__(self, i):
+#         #if self.rnn:
+#         #    instance = preprocess_seq_for_rnn(self.sequences[i], self.num_alphabets, self.cfg, self.augment)
+#         #    return instance, self.labels[i]
+#         #else:
+#         if not self.cached:
+#             instance_seq = self.preprocess(self.sequences[i], None, self.num_alphabets, self.max_len)
+#         else:
+#             instance_seq = (self.input_ids[i], self.token_type_ids[i], self.attention_mask[i])
+#         if self.valids is None:
+#             return (*instance_seq, self.labels[i])
+#         else:
+#             instance_label = self.preprocess_label(self.labels[i], self.valids[i], self.max_len)
+#             return (*instance_seq, *instance_label)
+    
+#     def check_cached(self, split):
+#         input_ids_path = os.path.join(self.cache_dir, f'cached_{split}_input_ids_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
+#         token_type_ids_path = os.path.join(self.cache_dir, f'cached_{split}_token_type_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
+#         attention_mask_path = os.path.join(self.cache_dir, f'cached_{split}_att_mask_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
+#         print(input_ids_path)
+#         print(token_type_ids_path)
+#         print(attention_mask_path)
+#         load_input = 0
+#         load_token_type = 0
+#         load_att_mask = 0
+#         if os.path.exists(input_ids_path):
+#             self.input_ids = torch.load(input_ids_path)
+#             load_input = 1
+#         if os.path.exists(token_type_ids_path):
+#             self.token_type_ids = torch.load(token_type_ids_path)
+#             load_token_type = 1
+#         if os.path.exists(attention_mask_path):
+#             self.attention_mask = torch.load(attention_mask_path)
+#             load_att_mask = 1
+#         if (load_input and load_token_type and load_att_mask):
+#             print("[mydataset.py] Cached input loaded.")
+#         else:
+#             print("[mydataset.py] Cached input not loaded. Need to do preprocess.")
+#         return (load_input and load_token_type and load_att_mask)
+
+
+
+    
+#     def set_max_len(self, max_len):
+#         """ set max_len """
+#         if max_len is not None:
+#             self.max_len = max_len
+#             if not self.truncate:
+#                 # split sequences/labels longer than max_len
+#                 sequences, labels, valids, l = [], [], [], self.max_len - 2
+#                 for i in range(len(self.sequences)):
+#                     seq, label = self.sequences[i], self.labels[i]
+#                     while len(seq) > self.max_len - 2:
+#                         sequences.append(seq[:l]);  seq = seq[l:]
+#                         labels.append(label[:l]);   label = label[l:]
+#                         valids.append(False)
+#                     sequences.append(seq); labels.append(label); valids.append(True)
+
+#                 self.sequences = sequences
+#                 self.labels = labels
+#                 self.valids = valids
+#         else:
+#             self.max_len = 128
+#             for sequence in self.sequences:
+#                 if len(sequence) > self.max_len:
+#                     self.max_len = len(sequence) + 2
+
+#     def set_augment(self, augment):
+#         """ set augmentation flag """
+#         self.augment = augment
+        
+#     def truncate_seq_pair(self, x0, x1, max_len):
+#         """ clip sequences for the maximum length limitation """
+#         if x1 is not None:
+#             max_len -= 3
+#             while True:
+#                 if len(x0) + len(x1) <= max_len: break
+#                 elif len(x0) > len(x1): x0 = x0[:-1]
+#                 else: x1 = x1[:-1]
+#         else:
+#             max_len -= 2
+#             x0 = x0[:max_len]
+#         return x0, x1
+
+#     def preprocess(self, x0, x1=None, num_alphabets=21, max_len=512):
+#         """ pre-processing steps for PLUS-TFM pre-training """
+#         num_alphabets = self.num_alphabets
+#         special_tokens = {"MASK": torch.tensor([self.tokenizer.mask_token_id], dtype=torch.long),
+#                           "CLS":  torch.tensor([self.tokenizer.cls_token_id], dtype=torch.long),
+#                           "SEP":  torch.tensor([self.tokenizer.sep_token_id], dtype=torch.long)}
+#         tokens = torch.zeros(max_len, dtype=torch.long)
+#         segments = torch.zeros(max_len, dtype=torch.long)
+#         input_mask = torch.zeros(max_len, dtype=torch.long)
+
+#         # -3  for special tokens [CLS], [SEP], [SEP]
+#         x0, x1 = self.truncate_seq_pair(x0, x1, max_len)
+
+#         # set tokens and segments
+#         if x1 is not None:
+#             pair_len = len(x0) + len(x1) + 3
+#             tokens[:pair_len] = torch.cat([special_tokens["CLS"], x0, special_tokens["SEP"], x1, special_tokens["SEP"]])
+#             segments[len(x0) + 2:pair_len] = 1
+#             input_mask[:pair_len] = 1 # True
+#         else:
+#             single_len = len(x0) + 2
+#             tokens[:len(x0) + 2] = torch.cat([special_tokens["CLS"], x0, special_tokens["SEP"]])
+#             input_mask[:len(x0) + 2] = 1 # True
+
+#         #if self.augment == 0:
+#         #    return tokens, segments, input_mask
+
+#         if self.augment != 0:
+#             for pos in range(1, len(x0) + 1):
+#                 if random.random() < self.augment: tokens[pos] = random.randint(1, num_alphabets - 1)
+
+#         return tokens, segments, input_mask
+#     def preprocess_label(self, y, v, max_len):
+#         """ pre-processing steps for PLUS-TFM fine-tuning """
+#         labels = torch.zeros(max_len, dtype=torch.long)
+#         valids = torch.zeros(1, dtype=torch.uint8)
+#         weights = torch.zeros(max_len, dtype=torch.bool)
+
+#         labels[1:len(y) + 1] = y
+#         valids[0] = 1 if v else 0
+#         weights[1:len(y) + 1] = True
+
+#         return labels, valids, weights
+
 class Seq_dataset(torch.utils.data.Dataset):
     """ Pytorch dataloader for PLUS single sequence task training and evaluation """
     def __init__(self, sequences, labels, encoder, tokenizer, args, max_len=None, truncate=True, cache_dir = None, split = 'train'):
@@ -121,12 +271,9 @@ class Seq_dataset(torch.utils.data.Dataset):
             return (*instance_seq, *instance_label)
     
     def check_cached(self, split):
-        input_ids_path = os.path.join(self.cache_dir, f'cached_{split}_input_ids_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
-        token_type_ids_path = os.path.join(self.cache_dir, f'cached_{split}_token_type_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
-        attention_mask_path = os.path.join(self.cache_dir, f'cached_{split}_att_mask_{self.args["task"]}_{self.args["model"]}_{self.args["current_input_length"]}.pkl')
-        print(input_ids_path)
-        print(token_type_ids_path)
-        print(attention_mask_path)
+        input_ids_path = os.path.join(self.cache_dir, f'cached_{split}_input_ids_{self.args["task"]}_{self.args["model"]}_512.pkl')
+        token_type_ids_path = os.path.join(self.cache_dir, f'cached_{split}_token_type_{self.args["task"]}_{self.args["model"]}_512.pkl')
+        attention_mask_path = os.path.join(self.cache_dir, f'cached_{split}_att_mask_{self.args["task"]}_{self.args["model"]}_512.pkl')
         load_input = 0
         load_token_type = 0
         load_att_mask = 0

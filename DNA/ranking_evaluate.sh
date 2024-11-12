@@ -1,7 +1,7 @@
 export USE_TORCH=1
 export CUDA_VISIBLE_DEVICES=1
 
-task="H4"
+task="H3K9ac"
 models="bert-base-uncased bert-base-chinese 
 bert-base-german-cased neuralmind/bert-base-portuguese-cased 
 tohoku-nlp/bert-base-japanese
@@ -12,7 +12,7 @@ seed=2020
 split="test"
 # model="microsoft/codebert-base-mlm"
 # model_state="microsoft_codebert-base-mlm"
-ranking="low"
+ranking="middle"
 
 for model in $models
 do

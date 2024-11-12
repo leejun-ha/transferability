@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--task', type = str)
 parser.add_argument('--model', type = str, default = 'bert-base-multilingual-uncased')
 parser.add_argument('--seed', type = int, default = 2020)
-parser.add_argument('--type', type = str, choices=['pretrain', 'scratch'])
+parser.add_argument('--type', type = str, choices=['pretrain', 'scratch'],  default='')
 parser.add_argument('--split', type = str, choices=['dev', 'test'], default='dev')
 parser.add_argument('--state_dict', type = str)
 parser.add_argument('--batch_size', '-b', type = int, default = 32)
@@ -51,7 +51,7 @@ model_replace = model_replace.replace("/", "_")
 print(model_replace)
 
 args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + args["ranking"] + '_256_token_mapping.pkl')
-args["state_dict"] += model_replace + "_" + "pretrain_seed" + str(args["seed"]) + "_table_" + args["ranking"] + "_" + str(args["step"]) + ".pkl"
+args["state_dict"] += model_replace + "_" + str(args['type']) + "_seed" + str(args["seed"]) + "_table_" + args["ranking"] + "_" + str(args["step"]) + ".pkl"
 
 data_path = os.path.join(args['datadir'], args['task'])
 data = torch.load(os.path.join(data_path, f'{args["task"]}_{model_replace}_data.pkl'))

@@ -55,9 +55,13 @@ model_replace = model_replace.replace("/", "_")
 print(model_replace)
 test_lens = [64, 128, 256, 384, 512]
 # args["shift_table"] = os.path.join(args["shift_table"], model_replace + '_' + args["ranking"] + '_256_token_mapping.pkl')
-args["state_dict"] += model_replace + "_" + "pretrain_seed" + str(args["seed"]) +"_" + "length" + args["token_len"] + "_" + str(args["step"]) + ".pkl"
+args["state_dict"] += model_replace + "_" + str(args['type'])+"_seed" + str(args["seed"]) +"_" + "length" + args["token_len"] + "_" + str(args["step"]) + ".pkl"
 
 individual_results = {}
+
+individual_results = {}
+total_samples = 0
+total_correct = 0
 
 for testlen in test_lens: 
     data_path = os.path.join(args['datadir'], args['task'])
@@ -65,21 +69,9 @@ for testlen in test_lens:
     attention_mask = torch.load(os.path.join(data_path, f'{args["task"]}_{model_replace}_attention_mask_{testlen}.pkl'))
     label = torch.load(os.path.join(data_path, f'{args["task"]}_{model_replace}_label_{testlen}.pkl'))
 
-    #train split
-    # data_num = data.shape[0]
-    # if args['split'] == 'dev':
-    #     split_start = int(data_num*0.9)
-    #     split_end = int(data_num*0.95)
-    # elif args['split'] == 'test':
-    #     split_start = int(data_num*0.95)
-    #     split_end = int(data_num)
-    # data = data[split_start:split_end]
-    # attention_mask = attention_mask[split_start:split_end]
-    # label = label[split_start:split_end]
-
     dataset_dev = torch.utils.data.TensorDataset(data, attention_mask, label) 
     print(f"Num of Data: {len(dataset_dev)}")
-    collate_fn = None #dataset.collate_sequences if flag_rnn else None
+    collate_fn = None
     iterator_dev = torch.utils.data.DataLoader(dataset_dev, batch_size=batch_size, 
                                             collate_fn=collate_fn, shuffle=True, pin_memory = True)
 
@@ -89,34 +81,14 @@ for testlen in test_lens:
         num_labels = 2
 
     config = transformers.AutoConfig.from_pretrained(model_name, num_labels = num_labels)
-    model = transformers.AutoModelForSequenceClassification.from_config(config)#.to(device)
+    model = transformers.AutoModelForSequenceClassification.from_config(config)
     model.load_state_dict(torch.load(args["state_dict"]))
     model.cuda()
-    #model = torch.nn.DataParallel(model)
+
     if args['shift_table'] != '':
         shift_table = torch.load(args['shift_table']).cuda()
 
-    # writer = tensorboardX.SummaryWriter(log_dir=args['logdir'], 
-    #                                     filename_suffix=f'_{args["split"]}_{args["task"]}_{args["type"]}_seed{args["seed"]}')
     model = model.eval()
-
-    def log_evaluation_results(total_samples, average_accuracy, individual_results):
-        log_filename = f'evaluation_results_{args["task"]}_{args["model"]}_{args["type"]}_seed{args["seed"]}_tokenlen{args["token_len"]}.txt'
-        
-        logging.basicConfig(filename=log_filename, level=logging.INFO, 
-                            format='%(message)s', filemode='w')
-        logger = logging.getLogger()
-        
-        logger.info("Evaluation results:\n")
-        logger.info(f"Total samples: {total_samples}")
-        logger.info(f"Average accuracy: {average_accuracy:.4f}\n")
-        
-        logger.info("Individual test_token_len results:")
-        for testlen, results in individual_results.items():
-            logger.info(f"test_token_len {testlen}:")
-            logger.info(f"  Samples: {results['samples']}")
-            logger.info(f"  Correct: {results['correct']}")
-            logger.info(f"  Accuracy: {results['accuracy']:.4f}\n")
 
     with torch.no_grad():
         dev_loss = 0
@@ -137,8 +109,38 @@ for testlen in test_lens:
             dev_loss += loss.item()
             ans = torch.argmax(logits, dim = -1)
             dev_acc = dev_acc + torch.sum(torch.eq(ans, labels)).item()
-        print(f'loss: {dev_loss/len(dataset_dev)}; acc:{dev_acc/len(dataset_dev)}')
-        # writer.add_scalar(f'{args["split"]}_loss', dev_loss/len(dataset_dev), args['step'])
-        # writer.add_scalar(f'{args["split"]}_acc', dev_acc/len(dataset_dev), args['step'])
-        # writer.close()
+        
+        accuracy = dev_acc / len(dataset_dev)
+        individual_results[testlen] = {
+            'samples': len(dataset_dev),
+            'correct': dev_acc,
+            'accuracy': accuracy
+        }
+        total_samples += len(dataset_dev)
+        total_correct += dev_acc
+        
+        print(f'test_token_len {testlen}: loss: {dev_loss/len(dataset_dev)}; acc:{accuracy}')
+
+average_accuracy = total_correct / total_samples
+
+def log_evaluation_results(total_samples, average_accuracy, individual_results):
+    log_filename = f'evaluation_results_{args["task"]}_{args["model"]}_{args["type"]}_seed{args["seed"]}_tokenlen{args["token_len"]}.txt'
     
+    logging.basicConfig(filename=log_filename, level=logging.INFO, 
+                        format='%(message)s', filemode='w')
+    logger = logging.getLogger()
+    
+    logger.info("Evaluation results:\n")
+    logger.info("Combined dataset results:")
+    logger.info(f"Total samples: {total_samples}")
+    logger.info(f"Average accuracy: {average_accuracy:.4f}\n")
+    
+    logger.info("Individual test_token_len results:")
+    for testlen in sorted(individual_results.keys()):
+        results = individual_results[testlen]
+        logger.info(f"test_token_len {testlen}:")
+        logger.info(f"  Samples: {results['samples']}")
+        logger.info(f"  Correct: {results['correct']}")
+        logger.info(f"  Accuracy: {results['accuracy']:.4f}\n")
+
+log_evaluation_results(total_samples, average_accuracy, individual_results)

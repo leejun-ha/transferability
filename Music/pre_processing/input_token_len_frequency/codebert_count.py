@@ -6,9 +6,7 @@ from tqdm import tqdm
 import random
 import logging
 import matplotlib.pyplot as plt
-import seaborn as sns
 import os
-import json
 from huggingface_hub import snapshot_download
 
 cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
@@ -16,19 +14,13 @@ cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
-# List of models and their corresponding datasets
-models = [
-    # ("bert-base-uncased", "wikimedia/wikipedia", "20231101.en", "text"),
-    # ("bert-base-chinese", "wikimedia/wikipedia", "20231101.zh", "text"),
-    # ("bert-base-german-cased", "wikimedia/wikipedia", "20231101.de", "text"),
-    ("neuralmind/bert-base-portuguese-cased", "wikimedia/wikipedia", "20231101.pt", "text"),
-    # ("tohoku-nlp/bert-base-japanese", "wikimedia/wikipedia", "20231101.ja", "text"),
-    # ("microsoft/codebert-base-mlm", "code_search_net", "all", "whole_func_string"),
-    # ("neulab/codebert-javascript", "code_search_net", "javascript", "whole_func_string"),
-    # ("neulab/codebert-java", "code_search_net", "java", "whole_func_string"),
-    # ("neulab/codebert-python", "code_search_net", "python", "whole_func_string"),
-    # ("neulab/codebert-c", "code_search_net", "go", "whole_func_string")
-    # ("neulab/codebert-c", "code_search_net", "go", "whole_func_string")
+# Model and dataset configurations
+model_name = "microsoft/codebert-base-mlm"
+datasets_config = [
+    ("cc_news", None, "text"),
+    ("openwebtext", None, "text"),
+    ("wikipedia", "20231101.en", "text"),
+    ("code_search_net", "all", "whole_func_string")
 ]
 
 def save_token_counts(token_counts, filename, truncate=True):
@@ -55,8 +47,11 @@ def analyze_tokens(dataset, tokenizer, text_field):
     total_tokens = 0
     token_frequencies = defaultdict(int)
     
-    for article in tqdm(dataset, desc="Processing Articles"):
-        tokens = tokenizer.tokenize(article[text_field])
+    for item in tqdm(dataset, desc="Processing Items"):
+        text = item[text_field]
+        if isinstance(text, list):  # Handle cases where text field is a list
+            text = " ".join(text)
+        tokens = tokenizer.tokenize(text)
         token_count = len(tokens)
         token_counts_per_sequence_no_truncation.append(token_count)
         
@@ -73,7 +68,7 @@ def analyze_tokens(dataset, tokenizer, text_field):
     average_token_count = np.mean(token_counts_per_sequence)
     return average_token_count, token_counts_per_sequence, token_counts_per_sequence_no_truncation, token_frequencies, total_tokens
 
-def create_visualizations(token_counts_per_sequence, frequencies, model_name, result_dir):
+def create_visualizations(token_counts_per_sequence, frequencies, model_name, dataset_name, result_dir):
     plt.figure(figsize=(15, 10))
     min_length = min(token_counts_per_sequence)
     max_length = max(token_counts_per_sequence)
@@ -89,7 +84,7 @@ def create_visualizations(token_counts_per_sequence, frequencies, model_name, re
     plt.yscale('log')  # Use log scale for y-axis
     plt.ylim(min_count, max_count)  # Set y-axis range
     
-    plt.title(f"Distribution of Input Token Lengths - {model_name}")
+    plt.title(f"Distribution of Input Token Lengths - {model_name} - {dataset_name}")
     plt.xlabel("Input Token Length")
     plt.ylabel("Count (log scale)")
     plt.xlim(min_length, max_length)
@@ -99,33 +94,43 @@ def create_visualizations(token_counts_per_sequence, frequencies, model_name, re
     plt.text(0.02, 0.93, f"Max count: {max_count}", transform=plt.gca().transAxes, va='top', ha='left')
     
     plt.tight_layout()
-    plt.savefig(f'{result_dir}/input_token_length_distribution.png', dpi=300)
+    plt.savefig(f'{result_dir}/{dataset_name}_input_token_length_distribution.png', dpi=300)
     plt.close()
 
+# Main processing
+logging.info(f"Processing model: {model_name}")
+model_replace = model_name.replace("/", "_")
+result_dir = model_replace + "_result"
+os.makedirs(result_dir, exist_ok=True)
 
-# Main processing loop
-for model_name, dataset_name, dataset_config, text_field in models:
-    logging.info(f"Processing model: {model_name}")
-    model_replace = model_name.replace("/", "_")
-    result_dir = model_replace + "_result"
-    os.makedirs(result_dir, exist_ok=True)
+try:
+    model_path = snapshot_download(repo_id=model_name)
+    logging.info(f"Model files downloaded to: {model_path}")
+    tokenizer = AutoTokenizer.from_pretrained(model_path, cache_dir=cache_dir, use_fast=False, force_download=True)
+except Exception as e:
+    logging.error(f"Failed to download model or initialize tokenizer for {model_name}: {str(e)}")
+    exit(1)
 
+for dataset_name, dataset_config, text_field in datasets_config:
+    logging.info(f"Processing dataset: {dataset_name}")
+    
     try:
-        model_path = snapshot_download(repo_id=model_name)
-        logging.info(f"Model files downloaded to: {model_path}")
-        tokenizer = AutoTokenizer.from_pretrained(model_path, cache_dir=cache_dir, use_fast=False, force_download=True)
+        if dataset_config:
+            dataset = load_dataset(dataset_name, dataset_config, split='train')
+        else:
+            dataset = load_dataset(dataset_name, split='train')
     except Exception as e:
-        logging.error(f"Failed to download model or initialize tokenizer for {model_name}: {str(e)}")
+        logging.error(f"Failed to load dataset {dataset_name}: {str(e)}")
         continue
-
-    dataset = load_dataset(dataset_name, dataset_config, split='train')
-    sampled_dataset = create_sample(dataset, sample_ratio=0.1)  # 1% sample
+    
+    sampled_dataset = create_sample(dataset, sample_ratio=0.01)  # 1% sample
 
     average_count, token_counts_per_sequence, token_counts_per_sequence_no_truncation, frequencies, total_tokens = analyze_tokens(sampled_dataset, tokenizer, text_field)
 
-    save_token_counts(token_counts_per_sequence, f'{result_dir}/token_counts_truncated.txt', truncate=True)
-    save_token_counts(token_counts_per_sequence_no_truncation, f'{result_dir}/token_counts_original.txt', truncate=False)
+    save_token_counts(token_counts_per_sequence, f'{result_dir}/{dataset_name}_token_counts_truncated.txt', truncate=True)
+    save_token_counts(token_counts_per_sequence_no_truncation, f'{result_dir}/{dataset_name}_token_counts_original.txt', truncate=False)
 
+    logging.info(f"Dataset: {dataset_name}")
     logging.info(f"Average Token Count per Sequence: {average_count:.2f}")
     logging.info(f"Total number of tokens: {total_tokens}")
     logging.info(f"Total number of sequences: {len(token_counts_per_sequence)}")
@@ -135,7 +140,7 @@ for model_name, dataset_name, dataset_config, text_field in models:
     logging.info(f"Original dataset size: {len(dataset)}")
     logging.info(f"Sampled dataset size: {len(sampled_dataset)}")
 
-    create_visualizations(token_counts_per_sequence, frequencies, model_replace, result_dir)
-    logging.info(f"Analysis complete for {model_replace}. Results saved in the '{result_dir}' directory.")
+    create_visualizations(token_counts_per_sequence, frequencies, model_replace, dataset_name, result_dir)
+    logging.info(f"Analysis complete for {dataset_name}. Results saved in the '{result_dir}' directory.")
 
-print("Analysis complete for all models.")
+print("Analysis complete for all datasets.")

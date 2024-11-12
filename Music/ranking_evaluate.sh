@@ -23,9 +23,9 @@ do
         --model ${model} \
         --seed ${seed} \
         --logdir ./log/$task \
-        --state_dict ./pth/save_model \
+        --state_dict ./pth/low_highest \
         --datadir ./data/pkl \
-        --shift_table ./shift_table/avg \
+        --shift_table ./shift_table/highest \
         --token_len ${token_len} \
         --ranking ${ranking}  \
         --oov ${oov}

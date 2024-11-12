@@ -5531,3 +5531,850 @@ RobertaForSequenceClassification(
 2024-11-11 10:56:54,306 - INFO - Step 900: Average loss = 1.0769
 2024-11-11 10:57:27,653 - INFO - Starting epoch 11/15
 2024-11-11 10:57:30,687 - INFO - Starting epoch 13/15
+2024-11-12 00:39:27,381 - INFO - Training arguments: {'task': 'localization', 'model': 'bert-base-uncased', 'type': 'scratch', 'seed': 2020, 'gradient_accumulation': 2, 'batch_size': 64, 'epoch': 15, 'warmup_step': 0, 'lr': 1e-05, 'shift': 0, 'shift_table': '', 'rand_embed': False, 'n_gpu': 1, 'ckpt': '', 'logdir': './log/localization', 'savedir': './pth', 'save_step': 3000, 'filename': None, 'postfix': '', 'ranking': '', 'input_lengths': [64, 128, 256, 384, 512], 'log_file': 'training_log.txt'}
+2024-11-12 00:39:31,319 - INFO - Model architecture:
+BertForSequenceClassification(
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=10, bias=True)
+)
+2024-11-12 00:39:31,319 - INFO - Starting epoch 1/15
+2024-11-12 00:39:45,915 - INFO - Step 50: Average loss = 1.9876
+2024-11-12 00:39:53,691 - INFO - Starting epoch 2/15
+2024-11-12 00:40:00,095 - INFO - Step 100: Average loss = 1.8466
+2024-11-12 00:40:14,273 - INFO - Step 150: Average loss = 1.6791
+2024-11-12 00:40:15,693 - INFO - Starting epoch 3/15
+2024-11-12 00:40:18,218 - INFO - Training arguments: {'task': 'localization', 'model': 'FacebookAI/roberta-base', 'type': 'pretrain', 'seed': 2020, 'gradient_accumulation': 2, 'batch_size': 64, 'epoch': 15, 'warmup_step': 0, 'lr': 1e-05, 'shift': 0, 'shift_table': '', 'rand_embed': False, 'n_gpu': 1, 'ckpt': '', 'logdir': './log/localization', 'savedir': './pth', 'save_step': 3000, 'filename': None, 'postfix': '', 'ranking': '', 'input_lengths': [64, 128, 256, 384, 512], 'log_file': 'training_log.txt'}
+2024-11-12 00:40:21,206 - INFO - Model architecture:
+RobertaForSequenceClassification(
+  (roberta): RobertaModel(
+    (embeddings): RobertaEmbeddings(
+      (word_embeddings): Embedding(50265, 768, padding_idx=1)
+      (position_embeddings): Embedding(514, 768, padding_idx=1)
+      (token_type_embeddings): Embedding(1, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): RobertaEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x RobertaLayer(
+          (attention): RobertaAttention(
+            (self): RobertaSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): RobertaSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): RobertaIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): RobertaOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+  )
+  (classifier): RobertaClassificationHead(
+    (dense): Linear(in_features=768, out_features=768, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+    (out_proj): Linear(in_features=768, out_features=10, bias=True)
+  )
+)
+2024-11-12 00:40:21,207 - INFO - Starting epoch 1/15
+2024-11-12 00:40:36,353 - INFO - Step 200: Average loss = 1.5885
+2024-11-12 00:40:52,701 - INFO - Step 50: Average loss = 2.0210
+2024-11-12 00:40:56,473 - INFO - Starting epoch 4/15
+2024-11-12 00:41:07,360 - INFO - Step 250: Average loss = 1.5826
+2024-11-12 00:41:09,790 - INFO - Starting epoch 2/15
+2024-11-12 00:41:23,841 - INFO - Step 100: Average loss = 1.7118
+2024-11-12 00:41:38,577 - INFO - Step 300: Average loss = 1.5458
+2024-11-12 00:41:44,851 - INFO - Starting epoch 5/15
+2024-11-12 00:41:55,175 - INFO - Step 150: Average loss = 1.5433
+2024-11-12 00:41:58,312 - INFO - Starting epoch 3/15
+2024-11-12 00:42:09,985 - INFO - Step 350: Average loss = 1.5244
+2024-11-12 00:42:26,587 - INFO - Step 200: Average loss = 1.4464
+2024-11-12 00:42:33,578 - INFO - Starting epoch 6/15
+2024-11-12 00:42:41,435 - INFO - Step 400: Average loss = 1.4863
+2024-11-12 00:42:47,033 - INFO - Starting epoch 4/15
+2024-11-12 00:42:58,057 - INFO - Step 250: Average loss = 1.3625
+2024-11-12 00:43:12,951 - INFO - Step 450: Average loss = 1.4906
+2024-11-12 00:43:22,532 - INFO - Starting epoch 7/15
+2024-11-12 00:43:29,913 - INFO - Step 300: Average loss = 1.3285
+2024-11-12 00:43:36,779 - INFO - Starting epoch 5/15
+2024-11-12 00:43:46,219 - INFO - Step 500: Average loss = 1.4304
+2024-11-12 00:44:04,708 - INFO - Step 350: Average loss = 1.2918
+2024-11-12 00:44:15,606 - INFO - Starting epoch 8/15
+2024-11-12 00:44:20,820 - INFO - Step 550: Average loss = 1.4427
+2024-11-12 00:44:30,944 - INFO - Starting epoch 6/15
+2024-11-12 00:44:39,705 - INFO - Step 400: Average loss = 1.2417
+2024-11-12 00:44:55,501 - INFO - Step 600: Average loss = 1.4196
+2024-11-12 00:45:09,425 - INFO - Starting epoch 9/15
+2024-11-12 00:45:14,642 - INFO - Step 450: Average loss = 1.2464
+2024-11-12 00:45:25,101 - INFO - Starting epoch 7/15
+2024-11-12 00:45:30,347 - INFO - Step 650: Average loss = 1.4161
+2024-11-12 00:45:49,581 - INFO - Step 500: Average loss = 1.2204
+2024-11-12 00:46:03,458 - INFO - Starting epoch 10/15
+2024-11-12 00:46:05,192 - INFO - Step 700: Average loss = 1.3553
+2024-11-12 00:46:19,312 - INFO - Starting epoch 8/15
+2024-11-12 00:46:24,559 - INFO - Step 550: Average loss = 1.1951
+2024-11-12 00:46:39,870 - INFO - Step 750: Average loss = 1.3822
+2024-11-12 00:46:57,234 - INFO - Starting epoch 11/15
+2024-11-12 00:46:59,638 - INFO - Step 600: Average loss = 1.2067
+2024-11-12 00:47:13,640 - INFO - Starting epoch 9/15
+2024-11-12 00:47:14,720 - INFO - Step 800: Average loss = 1.3462
+2024-11-12 00:47:34,548 - INFO - Step 650: Average loss = 1.1585
+2024-11-12 00:47:49,334 - INFO - Step 850: Average loss = 1.3543
+2024-11-12 00:47:51,074 - INFO - Starting epoch 12/15
+2024-11-12 00:48:07,766 - INFO - Starting epoch 10/15
+2024-11-12 00:48:09,499 - INFO - Step 700: Average loss = 1.1498
+2024-11-12 00:48:24,208 - INFO - Step 900: Average loss = 1.3330
+2024-11-12 00:48:44,661 - INFO - Step 750: Average loss = 1.1296
+2024-11-12 00:48:45,052 - INFO - Starting epoch 13/15
+2024-11-12 00:48:58,888 - INFO - Step 950: Average loss = 1.3450
+2024-11-12 00:49:02,007 - INFO - Starting epoch 11/15
+2024-11-12 00:49:19,512 - INFO - Step 800: Average loss = 1.1244
+2024-11-12 00:49:33,596 - INFO - Step 1000: Average loss = 1.3394
+2024-11-12 00:49:38,782 - INFO - Starting epoch 14/15
+2024-11-12 00:49:54,480 - INFO - Step 850: Average loss = 1.1292
+2024-11-12 00:49:56,241 - INFO - Starting epoch 12/15
+2024-11-12 00:50:08,445 - INFO - Step 1050: Average loss = 1.3097
+2024-11-12 00:50:29,472 - INFO - Step 900: Average loss = 1.1159
+2024-11-12 00:50:32,650 - INFO - Starting epoch 15/15
+2024-11-12 00:50:43,094 - INFO - Step 1100: Average loss = 1.3377
+2024-11-12 00:50:50,385 - INFO - Starting epoch 13/15
+2024-11-12 00:51:04,331 - INFO - Step 950: Average loss = 1.0909
+2024-11-12 00:51:17,903 - INFO - Step 1150: Average loss = 1.3033
+2024-11-12 00:51:27,102 - INFO - Final model saved: ./pth/localization_bert-base-uncased_scratch_seed2020_len64_final.pkl
+2024-11-12 00:51:29,538 - INFO - Model architecture:
+BertForSequenceClassification(
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=10, bias=True)
+)
+2024-11-12 00:51:29,538 - INFO - Starting epoch 1/15
+2024-11-12 00:51:36,172 - INFO - Step 1000: Average loss = 1.0952
+2024-11-12 00:51:41,445 - INFO - Starting epoch 14/15
+2024-11-12 00:52:11,313 - INFO - Step 1050: Average loss = 1.0728
+2024-11-12 00:52:35,093 - INFO - Step 50: Average loss = 1.9888
+2024-11-12 00:52:35,821 - INFO - Starting epoch 15/15
+2024-11-12 00:52:46,349 - INFO - Step 1100: Average loss = 1.0830
+2024-11-12 00:53:11,178 - INFO - Starting epoch 2/15
+2024-11-12 00:53:21,424 - INFO - Step 1150: Average loss = 1.0722
+2024-11-12 00:53:30,802 - INFO - Final model saved: ./pth/localization_FacebookAI_roberta-base_pretrain_seed2020_len64_final.pkl
+2024-11-12 00:53:32,934 - INFO - Model architecture:
+RobertaForSequenceClassification(
+  (roberta): RobertaModel(
+    (embeddings): RobertaEmbeddings(
+      (word_embeddings): Embedding(50265, 768, padding_idx=1)
+      (position_embeddings): Embedding(514, 768, padding_idx=1)
+      (token_type_embeddings): Embedding(1, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): RobertaEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x RobertaLayer(
+          (attention): RobertaAttention(
+            (self): RobertaSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): RobertaSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): RobertaIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): RobertaOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+  )
+  (classifier): RobertaClassificationHead(
+    (dense): Linear(in_features=768, out_features=768, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+    (out_proj): Linear(in_features=768, out_features=10, bias=True)
+  )
+)
+2024-11-12 00:53:32,934 - INFO - Starting epoch 1/15
+2024-11-12 00:53:37,785 - INFO - Step 100: Average loss = 1.8829
+2024-11-12 00:54:38,850 - INFO - Step 50: Average loss = 2.0172
+2024-11-12 00:54:43,475 - INFO - Step 150: Average loss = 1.7117
+2024-11-12 00:54:50,050 - INFO - Starting epoch 3/15
+2024-11-12 00:55:15,018 - INFO - Starting epoch 2/15
+2024-11-12 00:55:44,678 - INFO - Step 100: Average loss = 1.6958
+2024-11-12 00:55:49,125 - INFO - Step 200: Average loss = 1.6342
+2024-11-12 00:56:31,673 - INFO - Starting epoch 4/15
+2024-11-12 00:56:50,549 - INFO - Step 150: Average loss = 1.4770
+2024-11-12 00:56:54,612 - INFO - Step 250: Average loss = 1.6251
+2024-11-12 00:56:57,159 - INFO - Starting epoch 3/15
+2024-11-12 00:57:56,436 - INFO - Step 200: Average loss = 1.3518
+2024-11-12 00:58:00,111 - INFO - Step 300: Average loss = 1.5816
+2024-11-12 00:58:13,226 - INFO - Starting epoch 5/15
+2024-11-12 00:58:39,274 - INFO - Starting epoch 4/15
+2024-11-12 00:59:02,291 - INFO - Step 250: Average loss = 1.2615
+2024-11-12 00:59:05,657 - INFO - Step 350: Average loss = 1.5847
+2024-11-12 00:59:54,777 - INFO - Starting epoch 6/15
+2024-11-12 01:00:08,135 - INFO - Step 300: Average loss = 1.2416
+2024-11-12 01:00:11,119 - INFO - Step 400: Average loss = 1.5339
+2024-11-12 01:00:21,338 - INFO - Starting epoch 5/15
+2024-11-12 01:01:14,040 - INFO - Step 350: Average loss = 1.2167
+2024-11-12 01:01:16,619 - INFO - Step 450: Average loss = 1.5292
+2024-11-12 01:01:36,290 - INFO - Starting epoch 7/15
+2024-11-12 01:02:03,447 - INFO - Starting epoch 6/15
+2024-11-12 01:02:19,920 - INFO - Step 400: Average loss = 1.1674
+2024-11-12 01:02:22,177 - INFO - Step 500: Average loss = 1.4920
+2024-11-12 01:03:17,896 - INFO - Starting epoch 8/15
+2024-11-12 01:03:25,760 - INFO - Step 450: Average loss = 1.1467
+2024-11-12 01:03:27,753 - INFO - Step 550: Average loss = 1.5178
+2024-11-12 01:03:45,603 - INFO - Starting epoch 7/15
+2024-11-12 01:04:31,792 - INFO - Step 500: Average loss = 1.1269
+2024-11-12 01:04:33,368 - INFO - Step 600: Average loss = 1.4938
+2024-11-12 01:04:59,537 - INFO - Starting epoch 9/15
+2024-11-12 01:05:27,805 - INFO - Starting epoch 8/15
+2024-11-12 01:05:37,672 - INFO - Step 550: Average loss = 1.0950
+2024-11-12 01:05:38,918 - INFO - Step 650: Average loss = 1.4699
+2024-11-12 01:06:41,399 - INFO - Starting epoch 10/15
+2024-11-12 01:06:43,668 - INFO - Step 600: Average loss = 1.1146
+2024-11-12 01:06:44,692 - INFO - Step 700: Average loss = 1.4210
+2024-11-12 01:07:10,033 - INFO - Starting epoch 9/15
+2024-11-12 01:07:49,653 - INFO - Step 650: Average loss = 1.0581
+2024-11-12 01:07:50,342 - INFO - Step 750: Average loss = 1.4184
+2024-11-12 01:08:23,259 - INFO - Starting epoch 11/15
+2024-11-12 01:08:52,399 - INFO - Starting epoch 10/15
+2024-11-12 01:08:55,686 - INFO - Step 700: Average loss = 1.0545
+2024-11-12 01:08:56,095 - INFO - Step 800: Average loss = 1.4065
+2024-11-12 01:10:01,665 - INFO - Step 850: Average loss = 1.4026
+2024-11-12 01:10:01,682 - INFO - Step 750: Average loss = 1.0291
+2024-11-12 01:10:04,961 - INFO - Starting epoch 12/15
+2024-11-12 01:10:34,684 - INFO - Starting epoch 11/15
+2024-11-12 01:11:07,409 - INFO - Step 900: Average loss = 1.3602
+2024-11-12 01:11:07,623 - INFO - Step 800: Average loss = 1.0429
+2024-11-12 01:11:46,773 - INFO - Starting epoch 13/15
+2024-11-12 01:12:13,018 - INFO - Step 950: Average loss = 1.3861
+2024-11-12 01:12:13,541 - INFO - Step 850: Average loss = 1.0230
+2024-11-12 01:12:16,843 - INFO - Starting epoch 12/15
+2024-11-12 01:13:18,635 - INFO - Step 1000: Average loss = 1.3787
+2024-11-12 01:13:19,588 - INFO - Step 900: Average loss = 1.0114
+2024-11-12 01:13:28,512 - INFO - Starting epoch 14/15
+2024-11-12 01:13:59,300 - INFO - Starting epoch 13/15
+2024-11-12 01:14:24,257 - INFO - Step 1050: Average loss = 1.3382
+2024-11-12 01:14:25,676 - INFO - Step 950: Average loss = 0.9859
+2024-11-12 01:15:10,166 - INFO - Starting epoch 15/15
+2024-11-12 01:15:29,826 - INFO - Step 1100: Average loss = 1.3793
+2024-11-12 01:15:31,687 - INFO - Step 1000: Average loss = 0.9938
+2024-11-12 01:15:41,603 - INFO - Starting epoch 14/15
+2024-11-12 01:16:35,447 - INFO - Step 1150: Average loss = 1.3374
+2024-11-12 01:16:37,676 - INFO - Step 1050: Average loss = 0.9679
+2024-11-12 01:16:52,348 - INFO - Final model saved: ./pth/localization_bert-base-uncased_scratch_seed2020_len128_final.pkl
+2024-11-12 01:16:55,317 - INFO - Model architecture:
+BertForSequenceClassification(
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=10, bias=True)
+)
+2024-11-12 01:16:55,317 - INFO - Starting epoch 1/15
+2024-11-12 01:17:20,428 - INFO - Starting epoch 15/15
+2024-11-12 01:17:40,485 - INFO - Step 1100: Average loss = 0.9796
+2024-11-12 01:18:47,303 - INFO - Step 1150: Average loss = 0.9689
+2024-11-12 01:19:04,654 - INFO - Final model saved: ./pth/localization_FacebookAI_roberta-base_pretrain_seed2020_len128_final.pkl
+2024-11-12 01:19:06,281 - INFO - Step 50: Average loss = 1.9906
+2024-11-12 01:19:06,420 - INFO - Model architecture:
+RobertaForSequenceClassification(
+  (roberta): RobertaModel(
+    (embeddings): RobertaEmbeddings(
+      (word_embeddings): Embedding(50265, 768, padding_idx=1)
+      (position_embeddings): Embedding(514, 768, padding_idx=1)
+      (token_type_embeddings): Embedding(1, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): RobertaEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x RobertaLayer(
+          (attention): RobertaAttention(
+            (self): RobertaSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): RobertaSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): RobertaIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): RobertaOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+  )
+  (classifier): RobertaClassificationHead(
+    (dense): Linear(in_features=768, out_features=768, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+    (out_proj): Linear(in_features=768, out_features=10, bias=True)
+  )
+)
+2024-11-12 01:19:06,420 - INFO - Starting epoch 1/15
+2024-11-12 01:20:20,417 - INFO - Starting epoch 2/15
+2024-11-12 01:21:21,187 - INFO - Step 100: Average loss = 1.8657
+2024-11-12 01:21:21,573 - INFO - Step 50: Average loss = 1.9925
+2024-11-12 01:22:36,016 - INFO - Starting epoch 2/15
+2024-11-12 01:23:36,355 - INFO - Step 150: Average loss = 1.6872
+2024-11-12 01:23:37,025 - INFO - Step 100: Average loss = 1.7237
+2024-11-12 01:23:49,886 - INFO - Starting epoch 3/15
+2024-11-12 01:25:51,660 - INFO - Step 200: Average loss = 1.6264
+2024-11-12 01:25:52,551 - INFO - Step 150: Average loss = 1.4813
+2024-11-12 01:26:06,098 - INFO - Starting epoch 3/15
+2024-11-12 01:27:19,540 - INFO - Starting epoch 4/15
+2024-11-12 01:28:06,829 - INFO - Step 250: Average loss = 1.6266
+2024-11-12 01:28:08,005 - INFO - Step 200: Average loss = 1.3612
+2024-11-12 01:29:36,112 - INFO - Starting epoch 4/15
+2024-11-12 01:30:22,162 - INFO - Step 300: Average loss = 1.5946
+2024-11-12 01:30:23,492 - INFO - Step 250: Average loss = 1.2715
+2024-11-12 01:30:49,203 - INFO - Starting epoch 5/15
+2024-11-12 01:32:37,414 - INFO - Step 350: Average loss = 1.5752
+2024-11-12 01:32:38,766 - INFO - Step 300: Average loss = 1.1952
+2024-11-12 01:33:05,896 - INFO - Starting epoch 5/15
+2024-11-12 01:34:18,772 - INFO - Starting epoch 6/15
+2024-11-12 01:34:52,524 - INFO - Step 400: Average loss = 1.5383
+2024-11-12 01:34:54,055 - INFO - Step 350: Average loss = 1.1680
+2024-11-12 01:36:35,613 - INFO - Starting epoch 6/15
+2024-11-12 01:37:07,820 - INFO - Step 450: Average loss = 1.5335
+2024-11-12 01:37:09,435 - INFO - Step 400: Average loss = 1.1163
+2024-11-12 01:37:48,335 - INFO - Starting epoch 7/15
+2024-11-12 01:39:22,745 - INFO - Step 500: Average loss = 1.4902
+2024-11-12 01:39:24,601 - INFO - Step 450: Average loss = 1.0859
+2024-11-12 01:40:05,109 - INFO - Starting epoch 7/15
+2024-11-12 01:41:17,417 - INFO - Starting epoch 8/15
+2024-11-12 01:41:37,742 - INFO - Step 550: Average loss = 1.5294
+2024-11-12 01:41:39,779 - INFO - Step 500: Average loss = 1.0530
+2024-11-12 01:43:34,785 - INFO - Starting epoch 8/15
+2024-11-12 01:43:52,880 - INFO - Step 600: Average loss = 1.4999
+2024-11-12 01:43:55,077 - INFO - Step 550: Average loss = 1.0116
+2024-11-12 01:44:46,900 - INFO - Starting epoch 9/15
+2024-11-12 01:46:07,851 - INFO - Step 650: Average loss = 1.4959
+2024-11-12 01:46:10,382 - INFO - Step 600: Average loss = 1.0332
+2024-11-12 01:47:04,515 - INFO - Starting epoch 9/15
+2024-11-12 01:48:16,266 - INFO - Starting epoch 10/15
+2024-11-12 01:48:23,001 - INFO - Step 700: Average loss = 1.4427
+2024-11-12 01:48:25,648 - INFO - Step 650: Average loss = 0.9642
+2024-11-12 01:50:34,043 - INFO - Starting epoch 10/15
+2024-11-12 01:50:38,115 - INFO - Step 750: Average loss = 1.4545
+2024-11-12 01:50:40,811 - INFO - Step 700: Average loss = 0.9787
+2024-11-12 01:51:45,710 - INFO - Starting epoch 11/15
+2024-11-12 01:52:53,290 - INFO - Step 800: Average loss = 1.4649
+2024-11-12 01:52:56,096 - INFO - Step 750: Average loss = 0.9410
+2024-11-12 01:54:03,626 - INFO - Starting epoch 11/15
+2024-11-12 01:55:08,305 - INFO - Step 850: Average loss = 1.4495
+2024-11-12 01:55:11,185 - INFO - Step 800: Average loss = 0.9523
+2024-11-12 01:55:15,055 - INFO - Starting epoch 12/15
+2024-11-12 01:57:23,702 - INFO - Step 900: Average loss = 1.4238
+2024-11-12 01:57:26,581 - INFO - Step 850: Average loss = 0.9394
+2024-11-12 01:57:33,372 - INFO - Starting epoch 12/15
+2024-11-12 01:58:44,948 - INFO - Starting epoch 13/15
+2024-11-12 01:59:39,007 - INFO - Step 950: Average loss = 1.4273
+2024-11-12 01:59:41,979 - INFO - Step 900: Average loss = 0.9255
+2024-11-12 02:01:03,147 - INFO - Starting epoch 13/15
+2024-11-12 02:01:54,277 - INFO - Step 1000: Average loss = 1.4399
+2024-11-12 02:01:57,318 - INFO - Step 950: Average loss = 0.8976
+2024-11-12 02:02:14,529 - INFO - Starting epoch 14/15
+2024-11-12 02:04:09,538 - INFO - Step 1050: Average loss = 1.4057
+2024-11-12 02:04:12,722 - INFO - Step 1000: Average loss = 0.9028
+2024-11-12 02:04:33,029 - INFO - Starting epoch 14/15
+2024-11-12 02:05:44,210 - INFO - Starting epoch 15/15
+2024-11-12 02:06:24,729 - INFO - Step 1100: Average loss = 1.4327
+2024-11-12 02:06:28,133 - INFO - Step 1050: Average loss = 0.8773
+2024-11-12 02:08:03,171 - INFO - Starting epoch 15/15
+2024-11-12 02:08:40,081 - INFO - Step 1150: Average loss = 1.4026
+2024-11-12 02:08:43,892 - INFO - Step 1100: Average loss = 0.8845
+2024-11-12 02:09:14,437 - INFO - Final model saved: ./pth/localization_bert-base-uncased_scratch_seed2020_len256_final.pkl
+2024-11-12 02:09:16,886 - INFO - Model architecture:
+BertForSequenceClassification(
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=10, bias=True)
+)
+2024-11-12 02:09:16,886 - INFO - Starting epoch 1/15
+2024-11-12 02:10:56,470 - INFO - Step 1150: Average loss = 0.8823
+2024-11-12 02:11:31,109 - INFO - Final model saved: ./pth/localization_FacebookAI_roberta-base_pretrain_seed2020_len256_final.pkl
+2024-11-12 02:11:32,904 - INFO - Model architecture:
+RobertaForSequenceClassification(
+  (roberta): RobertaModel(
+    (embeddings): RobertaEmbeddings(
+      (word_embeddings): Embedding(50265, 768, padding_idx=1)
+      (position_embeddings): Embedding(514, 768, padding_idx=1)
+      (token_type_embeddings): Embedding(1, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): RobertaEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x RobertaLayer(
+          (attention): RobertaAttention(
+            (self): RobertaSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): RobertaSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): RobertaIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): RobertaOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+  )
+  (classifier): RobertaClassificationHead(
+    (dense): Linear(in_features=768, out_features=768, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+    (out_proj): Linear(in_features=768, out_features=10, bias=True)
+  )
+)
+2024-11-12 02:11:32,904 - INFO - Starting epoch 1/15
+2024-11-12 02:12:45,334 - INFO - Step 50: Average loss = 1.9876
+2024-11-12 02:14:41,871 - INFO - Starting epoch 2/15
+2024-11-12 02:15:04,701 - INFO - Step 50: Average loss = 1.9795
+2024-11-12 02:16:17,129 - INFO - Step 100: Average loss = 1.8513
+2024-11-12 02:17:01,209 - INFO - Starting epoch 2/15
+2024-11-12 02:18:36,491 - INFO - Step 100: Average loss = 1.7061
+2024-11-12 02:19:48,736 - INFO - Step 150: Average loss = 1.6839
+2024-11-12 02:20:09,862 - INFO - Starting epoch 3/15
+2024-11-12 02:22:08,256 - INFO - Step 150: Average loss = 1.4657
+2024-11-12 02:22:29,442 - INFO - Starting epoch 3/15
+2024-11-12 02:23:20,414 - INFO - Step 200: Average loss = 1.6212
+2024-11-12 02:25:38,103 - INFO - Starting epoch 4/15
+2024-11-12 02:25:40,071 - INFO - Step 200: Average loss = 1.3302
+2024-11-12 02:26:52,054 - INFO - Step 250: Average loss = 1.6089
+2024-11-12 02:27:57,641 - INFO - Starting epoch 4/15
+2024-11-12 02:29:11,633 - INFO - Step 250: Average loss = 1.2337
+2024-11-12 02:30:23,554 - INFO - Step 300: Average loss = 1.5848
+2024-11-12 02:31:05,875 - INFO - Starting epoch 5/15
+2024-11-12 02:32:43,267 - INFO - Step 300: Average loss = 1.1703
+2024-11-12 02:33:25,551 - INFO - Starting epoch 5/15
+2024-11-12 02:33:55,249 - INFO - Step 350: Average loss = 1.5692
+2024-11-12 02:36:14,729 - INFO - Step 350: Average loss = 1.1240
+2024-11-12 02:36:33,824 - INFO - Starting epoch 6/15
+2024-11-12 02:37:26,725 - INFO - Step 400: Average loss = 1.5407
+2024-11-12 02:38:53,662 - INFO - Starting epoch 6/15
+2024-11-12 02:39:46,691 - INFO - Step 400: Average loss = 1.0746
+2024-11-12 02:40:58,805 - INFO - Step 450: Average loss = 1.5340
+2024-11-12 02:42:02,517 - INFO - Starting epoch 7/15
+2024-11-12 02:43:18,931 - INFO - Step 450: Average loss = 1.0610
+2024-11-12 02:44:22,628 - INFO - Starting epoch 7/15
+2024-11-12 02:44:31,144 - INFO - Step 500: Average loss = 1.4896
+2024-11-12 02:46:51,129 - INFO - Step 500: Average loss = 1.0329
+2024-11-12 02:47:31,456 - INFO - Starting epoch 8/15
+2024-11-12 02:48:03,235 - INFO - Step 550: Average loss = 1.5122
+2024-11-12 02:49:51,335 - INFO - Starting epoch 8/15
+2024-11-12 02:50:23,076 - INFO - Step 550: Average loss = 0.9896
+2024-11-12 02:51:41,463 - INFO - Step 600: Average loss = 1.4913
+2024-11-12 02:53:13,723 - INFO - Starting epoch 9/15
+2024-11-12 02:54:13,628 - INFO - Step 600: Average loss = 0.9935
+2024-11-12 02:55:32,076 - INFO - Step 650: Average loss = 1.5054
+2024-11-12 02:55:45,815 - INFO - Starting epoch 9/15
+2024-11-12 02:58:04,231 - INFO - Step 650: Average loss = 0.9388
+2024-11-12 02:59:11,386 - INFO - Starting epoch 10/15
+2024-11-12 02:59:22,924 - INFO - Step 700: Average loss = 1.4439
+2024-11-12 03:01:43,588 - INFO - Starting epoch 10/15
+2024-11-12 03:01:55,098 - INFO - Step 700: Average loss = 0.9351
+2024-11-12 03:03:13,465 - INFO - Step 750: Average loss = 1.4455
+2024-11-12 03:05:08,897 - INFO - Starting epoch 11/15
+2024-11-12 03:05:45,832 - INFO - Step 750: Average loss = 0.9078
+2024-11-12 03:07:04,262 - INFO - Step 800: Average loss = 1.4665
+2024-11-12 03:07:41,214 - INFO - Starting epoch 11/15
+2024-11-12 03:09:36,531 - INFO - Step 800: Average loss = 0.9318
+2024-11-12 03:10:55,067 - INFO - Step 850: Average loss = 1.4451
+2024-11-12 03:11:06,588 - INFO - Starting epoch 12/15
+2024-11-12 03:13:27,283 - INFO - Step 850: Average loss = 0.8945
+2024-11-12 03:13:38,843 - INFO - Starting epoch 12/15
+2024-11-12 03:14:45,817 - INFO - Step 900: Average loss = 1.4299
+2024-11-12 03:17:04,237 - INFO - Starting epoch 13/15
+2024-11-12 03:17:18,037 - INFO - Step 900: Average loss = 0.8905
+2024-11-12 03:18:36,570 - INFO - Step 950: Average loss = 1.4288
+2024-11-12 03:19:36,426 - INFO - Starting epoch 13/15
+2024-11-12 03:21:08,715 - INFO - Step 950: Average loss = 0.8613
+2024-11-12 03:22:27,140 - INFO - Step 1000: Average loss = 1.4373
+2024-11-12 03:23:01,626 - INFO - Starting epoch 14/15
+2024-11-12 03:24:59,241 - INFO - Step 1000: Average loss = 0.8741
+2024-11-12 03:25:33,815 - INFO - Starting epoch 14/15
+2024-11-12 03:26:17,727 - INFO - Step 1050: Average loss = 1.4118
+2024-11-12 03:28:49,927 - INFO - Step 1050: Average loss = 0.8390
+2024-11-12 03:28:59,222 - INFO - Starting epoch 15/15
+2024-11-12 03:30:08,349 - INFO - Step 1100: Average loss = 1.4387
+2024-11-12 03:31:31,374 - INFO - Starting epoch 15/15
+2024-11-12 03:32:40,345 - INFO - Step 1100: Average loss = 0.8506
+2024-11-12 03:33:58,925 - INFO - Step 1150: Average loss = 1.4129
+2024-11-12 03:34:57,158 - INFO - Final model saved: ./pth/localization_bert-base-uncased_scratch_seed2020_len384_final.pkl
+2024-11-12 03:34:59,993 - INFO - Model architecture:
+BertForSequenceClassification(
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=10, bias=True)
+)
+2024-11-12 03:34:59,993 - INFO - Starting epoch 1/15
+2024-11-12 03:36:27,497 - INFO - Step 1150: Average loss = 0.8426
+2024-11-12 03:37:25,670 - INFO - Final model saved: ./pth/localization_FacebookAI_roberta-base_pretrain_seed2020_len384_final.pkl
+2024-11-12 03:37:27,358 - INFO - Model architecture:
+RobertaForSequenceClassification(
+  (roberta): RobertaModel(
+    (embeddings): RobertaEmbeddings(
+      (word_embeddings): Embedding(50265, 768, padding_idx=1)
+      (position_embeddings): Embedding(514, 768, padding_idx=1)
+      (token_type_embeddings): Embedding(1, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): RobertaEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x RobertaLayer(
+          (attention): RobertaAttention(
+            (self): RobertaSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): RobertaSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): RobertaIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): RobertaOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+  )
+  (classifier): RobertaClassificationHead(
+    (dense): Linear(in_features=768, out_features=768, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+    (out_proj): Linear(in_features=768, out_features=10, bias=True)
+  )
+)
+2024-11-12 03:37:27,358 - INFO - Starting epoch 1/15
+2024-11-12 03:40:18,515 - INFO - Step 50: Average loss = 1.9867
+2024-11-12 03:42:47,726 - INFO - Step 50: Average loss = 1.9781
+2024-11-12 03:43:14,575 - INFO - Starting epoch 2/15
+2024-11-12 03:45:38,769 - INFO - Step 100: Average loss = 1.8364
+2024-11-12 03:45:44,015 - INFO - Starting epoch 2/15
+2024-11-12 03:48:07,990 - INFO - Step 100: Average loss = 1.7421
+2024-11-12 03:50:58,812 - INFO - Step 150: Average loss = 1.6616
+2024-11-12 03:51:28,356 - INFO - Starting epoch 3/15
+2024-11-12 03:53:20,137 - INFO - Step 150: Average loss = 1.5297
+2024-11-12 03:53:50,588 - INFO - Starting epoch 3/15
+2024-11-12 03:56:01,869 - INFO - Step 200: Average loss = 1.6062
+2024-11-12 03:58:24,265 - INFO - Step 200: Average loss = 1.3565
+2024-11-12 03:59:19,174 - INFO - Starting epoch 4/15
+2024-11-12 04:01:05,433 - INFO - Step 250: Average loss = 1.5936
+2024-11-12 04:01:41,937 - INFO - Starting epoch 4/15
+2024-11-12 04:03:28,165 - INFO - Step 250: Average loss = 1.2316
+2024-11-12 04:06:05,983 - INFO - Step 300: Average loss = 1.5697
+2024-11-12 04:06:59,098 - INFO - Starting epoch 5/15
+2024-11-12 04:08:10,872 - INFO - Step 300: Average loss = 1.1653
+2024-11-12 04:09:03,982 - INFO - Starting epoch 5/15
+2024-11-12 04:10:31,499 - INFO - Step 350: Average loss = 1.5469
+2024-11-12 04:12:36,628 - INFO - Step 350: Average loss = 1.1045
+2024-11-12 04:13:50,627 - INFO - Starting epoch 6/15
+2024-11-12 04:14:56,976 - INFO - Step 400: Average loss = 1.5121
+2024-11-12 04:15:55,931 - INFO - Starting epoch 6/15
+2024-11-12 04:17:04,970 - INFO - Step 400: Average loss = 1.0706
+2024-11-12 04:19:38,203 - INFO - Step 450: Average loss = 1.5104
+2024-11-12 04:21:05,720 - INFO - Starting epoch 7/15
+2024-11-12 04:21:56,562 - INFO - Step 450: Average loss = 1.0287
+2024-11-12 04:23:24,628 - INFO - Starting epoch 7/15
+2024-11-12 04:24:31,256 - INFO - Step 500: Average loss = 1.4753
+2024-11-12 04:26:49,771 - INFO - Step 500: Average loss = 1.0025
+2024-11-12 04:28:38,952 - INFO - Starting epoch 8/15
+2024-11-12 04:29:22,868 - INFO - Step 550: Average loss = 1.4931
+2024-11-12 04:30:58,277 - INFO - Starting epoch 8/15
+2024-11-12 04:31:42,352 - INFO - Step 550: Average loss = 0.9568
+2024-11-12 04:34:15,024 - INFO - Step 600: Average loss = 1.4733
+2024-11-12 04:36:12,530 - INFO - Starting epoch 9/15
+2024-11-12 04:36:35,254 - INFO - Step 600: Average loss = 0.9709
+2024-11-12 04:38:32,383 - INFO - Starting epoch 9/15
+2024-11-12 04:39:07,344 - INFO - Step 650: Average loss = 1.4849
+2024-11-12 04:41:27,728 - INFO - Step 650: Average loss = 0.9101
+2024-11-12 04:43:45,220 - INFO - Starting epoch 10/15
+2024-11-12 04:43:59,853 - INFO - Step 700: Average loss = 1.4320
+2024-11-12 04:46:05,383 - INFO - Starting epoch 10/15
+2024-11-12 04:46:20,053 - INFO - Step 700: Average loss = 0.9072
+2024-11-12 04:48:51,688 - INFO - Step 750: Average loss = 1.4261
+2024-11-12 04:51:11,705 - INFO - Step 750: Average loss = 0.8789
+2024-11-12 04:51:17,487 - INFO - Starting epoch 11/15
+2024-11-12 04:53:38,303 - INFO - Starting epoch 11/15
+2024-11-12 04:53:43,856 - INFO - Step 800: Average loss = 1.4511
+2024-11-12 04:56:04,641 - INFO - Step 800: Average loss = 0.8925
+2024-11-12 04:58:37,022 - INFO - Step 850: Average loss = 1.4284
+2024-11-12 04:58:51,545 - INFO - Starting epoch 12/15
+2024-11-12 05:00:57,249 - INFO - Step 850: Average loss = 0.8603
+2024-11-12 05:01:11,703 - INFO - Starting epoch 12/15
+2024-11-12 05:03:28,823 - INFO - Step 900: Average loss = 1.4108
+2024-11-12 05:05:49,952 - INFO - Step 900: Average loss = 0.8495
+2024-11-12 05:06:24,515 - INFO - Starting epoch 13/15
+2024-11-12 05:08:21,249 - INFO - Step 950: Average loss = 1.4126
+2024-11-12 05:08:45,268 - INFO - Starting epoch 13/15
+2024-11-12 05:10:41,717 - INFO - Step 950: Average loss = 0.8220
+2024-11-12 05:13:12,754 - INFO - Step 1000: Average loss = 1.4197
+2024-11-12 05:13:56,671 - INFO - Starting epoch 14/15
+2024-11-12 05:15:33,980 - INFO - Step 1000: Average loss = 0.8389
+2024-11-12 05:16:17,668 - INFO - Starting epoch 14/15
+2024-11-12 05:18:05,770 - INFO - Step 1050: Average loss = 1.3962
+2024-11-12 05:20:26,697 - INFO - Step 1050: Average loss = 0.8013
+2024-11-12 05:21:30,385 - INFO - Starting epoch 15/15
+2024-11-12 05:22:58,302 - INFO - Step 1100: Average loss = 1.4214
+2024-11-12 05:23:52,214 - INFO - Starting epoch 15/15
+2024-11-12 05:25:19,963 - INFO - Step 1100: Average loss = 0.8191
+2024-11-12 05:27:50,103 - INFO - Step 1150: Average loss = 1.3971
+2024-11-12 05:29:03,323 - INFO - Final model saved: ./pth/localization_bert-base-uncased_scratch_seed2020_len512_final.pkl
+2024-11-12 05:29:35,065 - INFO - Step 1150: Average loss = 0.8116
+2024-11-12 05:30:09,827 - INFO - Final model saved: ./pth/localization_FacebookAI_roberta-base_pretrain_seed2020_len512_final.pkl

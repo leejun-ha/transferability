@@ -11,11 +11,11 @@ seed=2020
 batch=16
 token_len="256"
 # token_lens="256"
-ranking="align"
+ranking="low"
 oov=0
 for model in $models
 do
-    CUDA_VISIBLE_DEVICES=1 python evaluate.py --task $task \
+    CUDA_VISIBLE_DEVICES=0 python evaluate.py --task $task \
         --split test \
         --step ${step} \
         -b ${batch} \
@@ -25,7 +25,7 @@ do
         --logdir ./log/$task \
         --state_dict ./pth/save_model \
         --datadir ./data/pkl \
-        --shift_table ./shift_table/freq_align \
+        --shift_table ./shift_table/ \
         --token_len ${token_len} \
         --ranking ${ranking}  \
         --oov ${oov}

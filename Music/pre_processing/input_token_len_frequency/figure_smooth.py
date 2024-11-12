@@ -4,14 +4,15 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
+from scipy.ndimage import gaussian_filter1d  # For Gaussian smoothing
 
-# Function to read token counts from a file and limit to token lengths between 0 and 512
+# Function to read token counts from a file and limit to token lengths between 64 and 512
 def read_token_counts(filename):
     token_counts = defaultdict(int)
     with open(filename, 'r') as f:
         for line in tqdm(f, desc="Reading Token Counts", unit=" lines"):
             length, count = map(int, line.strip().split(': '))
-            if 64 <= length <= 512:  # Limit to token lengths between 0 and 512
+            if length in [64, 128, 256, 384, 512]:  # Only consider representative values
                 token_counts[length] += count
     return token_counts
 
@@ -20,7 +21,7 @@ def load_performance_data(json_file):
     with open(json_file, 'r') as f:
         return json.load(f)
 
-# Function to create and save a graph for a single model
+# Function to create and save a graph for a single model with Gaussian smoothing applied only to representative values
 def create_single_graph(model, ax=None, save_individual=True):
     if ax is None:
         fig, ax = plt.subplots(figsize=(12, 8))
@@ -28,16 +29,19 @@ def create_single_graph(model, ax=None, save_individual=True):
     # Load performance data for the model
     performance_data = load_performance_data(f'{model}_result/performance_results.json')
     
-    # Read token counts from the text file (limited to token lengths between 0 and 512)
+    # Read token counts from the text file (limited to representative values: 64, 128, 256, 384, and 512)
     counts_file = f'{model}_result/token_counts_original.txt'
     token_counts = read_token_counts(counts_file)
 
     # Prepare data for plotting
-    lengths = list(token_counts.keys())
-    counts = list(token_counts.values())
+    lengths = np.array([64, 128, 256, 384, 512])  # Representative lengths
+    counts = np.array([token_counts[length] for length in lengths])  # Corresponding counts
     
-    # Plot token count distribution (line plot)
-    ax.plot(lengths, counts, color='blue', alpha=0.7, label='Token Count')
+    # Apply Gaussian smoothing to the token count data (for the representative values)
+    counts_smooth = gaussian_filter1d(counts, sigma=1)  # Adjust sigma for more or less smoothing
+    
+    # Plot only the smoothed token count distribution (line plot)
+    ax.plot(lengths, counts_smooth, color='blue', alpha=0.7, marker='o', label='Token Count')
     
     # Set logarithmic scale for y-axis (token counts)
     ax.set_yscale('log')
@@ -47,7 +51,7 @@ def create_single_graph(model, ax=None, save_individual=True):
     
     # Add labels and title
     ax.set_xlabel('Input Token Length', fontsize=24)
-    ax.set_ylabel('Count (log scale)', fontsize=24, color='blue')
+    ax.set_ylabel('Count (log scale)', fontsize=24)
     ax.set_title(model, fontsize=24)
 
     # Plot performance data (line chart on secondary y-axis)
@@ -68,7 +72,7 @@ def create_single_graph(model, ax=None, save_individual=True):
     ax2.set_ylim(common_y_perf_min, common_y_perf_max)
     
     # Set labels for performance axis
-    ax2.set_ylabel('Performance', fontsize=20, color='blue')
+    ax2.set_ylabel('Performance', fontsize=20)
 
     # Combine legends from both axes (token count and performance)
     lines1, labels1 = ax.get_legend_handles_labels()
@@ -80,13 +84,13 @@ def create_single_graph(model, ax=None, save_individual=True):
     ax.tick_params(axis='both', which='major', labelsize=18)
     ax2.tick_params(axis='y', which='major', labelsize=18)
 
-    # Set x-axis ticks to show 64, 128, 256, 384, 512
+    # Set x-axis ticks to show only the representative values: 64, 128, 256, 384, and 512
     ax.set_xticks(perf_lengths)
     ax.set_xticklabels(perf_lengths)
 
     # Set color for y-axis ticks and label
-    ax.tick_params(axis='y', colors='blue')
-    ax2.tick_params(axis='y', colors='red')
+    ax.tick_params(axis='y')
+    ax2.tick_params(axis='y')
 
     if save_individual:
         # Adjust layout and save the figure as an individual PNG file
@@ -110,31 +114,32 @@ models = [
 ]
 
 # Set common y-axis limits for token counts and performance
-common_y_count_min = 1e0  # Minimum count (log scale)
-common_y_count_max = 1e4  # Maximum count (log scale)
+common_y_count_min = 1e0   # Minimum count (log scale)
+common_y_count_max = 1e6   # Maximum count (log scale)
 
 common_y_perf_min = 0      # Minimum performance value
-common_y_perf_max = 0.8    # Maximum performance value
+common_y_perf_max = 0.8     # Maximum performance value
 
-# Create individual graphs
+# Create individual graphs for each model in the list of models
 for model in models:
     create_single_graph(model)
 
-# Create combined graph with 5 subplots
+# Create combined graph with subplots for multiple models (first five models in this case)
 fig, axs = plt.subplots(2, 3, figsize=(30, 20))
 fig.suptitle("Token Count vs Performance for Different Models", fontsize=28)
 
-for i, model in enumerate(models[:5]):  # Only use the first 5 models
-    row = i // 3
-    col = i % 3
-    create_single_graph(model, ax=axs[row, col], save_individual=False)
+for i, model in enumerate(models[:5]):   # Only use the first five models
+   row = i // 3
+   col = i % 3
+   create_single_graph(model, ax=axs[row][col], save_individual=False)
 
-# Remove the empty subplot
-fig.delaxes(axs[1, 2])
+# Remove the empty subplot if there are fewer than six subplots needed.
+fig.delaxes(axs[1][2])
 
-# Adjust layout and save the combined figure
+# Adjust layout and save the combined figure as an image file.
 plt.tight_layout()
-plt.savefig('figure/combined_token_count_vs_performance.png', dpi=300, bbox_inches='tight')
+plt.savefig('figure/combined_token_count_vs_performance.png', dpi=300,
+            bbox_inches='tight')
 plt.close()
 
 print("Combined graph saved as 'combined_token_count_vs_performance.png'")

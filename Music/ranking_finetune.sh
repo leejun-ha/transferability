@@ -12,7 +12,7 @@ epoch=30
 batch=16
 token_len="256"
 # token_len="256"
-ranking="align"
+ranking="low"
 
 oov=0
 
@@ -24,7 +24,7 @@ do
         -e ${epoch} \
         -b ${batch} \
         --token_len ${token_len} \
-        --shift_table ./shift_table/freq_align \
+        --shift_table ./shift_table/avg \
         --ranking ${ranking} \
         --oov ${oov}
 done

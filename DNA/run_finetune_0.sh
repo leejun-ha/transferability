@@ -9,7 +9,7 @@ tohoku-nlp/bert-base-japanese
 microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 "
 # models="microsoft/codebert-base"
-ranking="top"
+ranking="low"
 
 for model in $models
 do

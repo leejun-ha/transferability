@@ -1,9 +1,6 @@
 export USE_TORCH=1
 
-models="bert-base-uncased bert-base-chinese
-bert-base-german-cased neuralmind/bert-base-portuguese-cased 
-tohoku-nlp/bert-base-japanese
-microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
+models="microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 "
 
 # model="bert-base-multilingual-cased"
@@ -18,7 +15,7 @@ oov=0
 
 for model in $models
 do
-    CUDA_VISIBLE_DEVICES=2 python finetune.py \
+    CUDA_VISIBLE_DEVICES=3 python finetune.py \
         --model ${model}  \
         --type pretrain \
         -e ${epoch} \

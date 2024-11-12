@@ -15,13 +15,16 @@ def create_low_token_mapping(tokenizer, frequencies, model_name, low_count=256):
     
     # Select tokens from the bottom 33%
     bottom_third = sorted_tokens[int(len(sorted_tokens) * 2/3):]
-    bottom_third_freq = [freq for _, freq in bottom_third]
-    avg_freq = np.mean(bottom_third_freq)
-    low_tokens = [token for token, freq in bottom_third if abs(freq - avg_freq) < avg_freq * 0.1][:low_count]
+    
+    # Sort the bottom third by frequency in descending order
+    bottom_third_sorted = sorted(bottom_third, key=lambda x: x[1], reverse=True)
+    
+    # Select the top 'low_count' tokens from the sorted bottom third
+    low_tokens = bottom_third_sorted[:low_count]
     
     mapping_tensor = torch.full((256, 1), 256, dtype=torch.long)
     
-    for rank, token in enumerate(low_tokens):
+    for rank, (token, _) in enumerate(low_tokens):
         if token in vocab:
             index = vocab[token]
             if rank < 128:
@@ -32,10 +35,18 @@ def create_low_token_mapping(tokenizer, frequencies, model_name, low_count=256):
     low_embedding = nn.Embedding.from_pretrained(mapping_tensor.float(), freeze=False)
     
     model_replace = model_name.replace("/", "_")
-    os.makedirs('../../shift_table/avg', exist_ok=True)
-    torch.save(low_embedding, f'../../shift_table/avg/{model_replace}_low_256_token_mapping.pkl')
+    os.makedirs('../../shift_table/highest', exist_ok=True)
+    torch.save(low_embedding, f'../../shift_table/highest/{model_replace}_low_256_token_mapping.pkl')
     
-    return low_embedding, low_tokens
+    # Save token names and frequencies to a log file
+    log_file_path = f'../../shift_table/highest/{model_replace}_low_256_token_mapping_log.txt'
+    with open(log_file_path, 'w', encoding='utf-8') as log_file:
+        log_file.write(f"Low token mapping for {model_name}\n")
+        log_file.write("Rank\tToken\tFrequency\n")
+        for rank, (token, freq) in enumerate(low_tokens):
+            log_file.write(f"{rank}\t{token}\t{freq}\n")
+    
+    return low_embedding, [token for token, _ in low_tokens]
 
 def inspect_low_embedding(file_path, tokenizer, low_tokens):
     embedding = torch.load(file_path)
@@ -52,8 +63,16 @@ def inspect_low_embedding(file_path, tokenizer, low_tokens):
 
 # Models to process
 models = [
-    "bert-base-multilingual-uncased",
-    "bert-base-multilingual-cased",
+        "bert-base-uncased",
+    "bert-base-chinese",
+    "bert-base-german-cased",
+    "neuralmind/bert-base-portuguese-cased",
+    "tohoku-nlp/bert-base-japanese",
+    "microsoft/codebert-base-mlm",
+    "neulab/codebert-javascript",
+    "neulab/codebert-java",
+    "neulab/codebert-python",
+    "neulab/codebert-c"
 ]
 
 for model_name in models:
@@ -77,9 +96,11 @@ for model_name in models:
     print("--------------------")
 
     # Inspect the created low token mapping
-    file_path = f'../../shift_table/avg/{model_replace}_low_256_token_mapping.pkl'
+    file_path = f'../../shift_table/highest/{model_replace}_low_256_token_mapping.pkl'
     print(f"\nInspecting low token mapping for {model_name}")
     inspect_low_embedding(file_path, tokenizer, low_tokens)
     print("--------------------")
 
 print("Low token mapping created and inspected for all models.")
+
+

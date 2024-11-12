@@ -11,7 +11,7 @@ x = np.arange(len(models))
 width = 0.2  # Width of each bar
 
 # Adjust the distance between groups
-group_distance = 0.3  # Decrease this value to bring groups closer
+group_distance = 0.2  # Decrease this value to bring groups closer
 
 # Create the figure and axis objects
 fig, ax = plt.subplots(figsize=(8, 5))
@@ -22,13 +22,13 @@ rects2 = ax.bar(x + width/2, scratch_results, width, label='Scratch', color='ora
 
 # Customize the chart
 ax.set_ylabel('Scores', fontsize=18)
-ax.set_title('Comparison of Pre-Training and Scratch Results', fontsize=18)
+# ax.set_title('Comparison of Pre-Training and Scratch Results', fontsize=18)
 ax.set_xticks(x)
 ax.set_xticklabels(models, fontsize=30)
 ax.legend(fontsize=16)
 
 # Set y-axis limits
-ax.set_ylim(0, 0.8)
+ax.set_ylim(0.4, 0.6)
 
 # Increase font size for tick labels
 ax.tick_params(axis='both', which='major', labelsize=20)

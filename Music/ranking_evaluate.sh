@@ -25,7 +25,7 @@ do
         --logdir ./log/$task \
         --state_dict ./pth/save_model \
         --datadir ./data/pkl \
-        --shift_table ./shift_table/ \
+        --shift_table ./shift_table/avg \
         --token_len ${token_len} \
         --ranking ${ranking}  \
         --oov ${oov}

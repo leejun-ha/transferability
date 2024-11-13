@@ -1,0 +1,15 @@
+Combined Stats:
+Total number of tokens: 23937427
+Total number of sequences: 75704
+Average Token Count per Sequence: 316.20
+Top 10 Token Frequencies:
+Ċ: 1194240
+,: 849109
+Ġthe: 843467
+.: 751940
+Ġof: 513253
+Ġ: 478908
+Ġin: 423389
+Ġand: 415929
+Ġa: 302728
+Ġto: 270168

@@ -1,0 +1,32 @@
+Evaluation results:
+
+Combined dataset results:
+Total samples: 500045
+Average accuracy: 0.6436
+
+Individual test_token_len results:
+test_token_len 64:
+  Samples: 250017
+  Correct: 153774
+  Accuracy: 0.6151
+
+test_token_len 128:
+  Samples: 111123
+  Correct: 72535
+  Accuracy: 0.6527
+
+test_token_len 256:
+  Samples: 55564
+  Correct: 37925
+  Accuracy: 0.6825
+
+test_token_len 384:
+  Samples: 55559
+  Correct: 37418
+  Accuracy: 0.6735
+
+test_token_len 512:
+  Samples: 27782
+  Correct: 20156
+  Accuracy: 0.7255
+

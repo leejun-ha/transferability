@@ -1,0 +1,58 @@
+Frédéric Chopin: 198
+Franz Schubert: 171
+Johann Sebastian Bach: 138
+Ludwig van Beethoven: 134
+Franz Liszt: 125
+Sergei Rachmaninoff: 54
+Robert Schumann: 42
+Claude Debussy: 41
+Joseph Haydn: 38
+Wolfgang Amadeus Mozart: 34
+Alexander Scriabin: 28
+Felix Mendelssohn: 28
+Domenico Scarlatti: 27
+Johannes Brahms: 24
+Franz Schubert / Franz Liszt: 8
+Isaac Albéniz: 7
+Muzio Clementi: 6
+Pyotr Ilyich Tchaikovsky: 6
+Pyotr Ilyich Tchaikovsky / Mikhail Pletnev: 6
+Johann Sebastian Bach / Ferruccio Busoni: 5
+George Frideric Handel: 4
+Mily Balakirev: 4
+Modest Mussorgsky: 4
+Nikolai Medtner: 4
+Edvard Grieg: 3
+Felix Mendelssohn / Sergei Rachmaninoff: 3
+Johann Sebastian Bach / Franz Liszt: 3
+Alban Berg: 2
+César Franck: 2
+Franz Liszt / Vladimir Horowitz: 2
+Johann Sebastian Bach / Egon Petri: 2
+Leoš Janáček: 2
+Mikhail Glinka / Mily Balakirev: 2
+Pyotr Ilyich Tchaikovsky / Sergei Rachmaninoff: 2
+Richard Wagner / Franz Liszt: 2
+Antonio Soler: 1
+Carl Maria von Weber: 1
+Charles Gounod / Franz Liszt: 1
+Franz Liszt / Camille Saint-Saëns: 1
+Franz Schubert / Leopold Godowsky: 1
+Fritz Kreisler / Sergei Rachmaninoff: 1
+George Enescu: 1
+Georges Bizet / Ferruccio Busoni: 1
+Georges Bizet / Moritz Moszkowski: 1
+Georges Bizet / Vladimir Horowitz: 1
+Giuseppe Verdi / Franz Liszt: 1
+Henry Purcell: 1
+Isaac Albéniz / Leopold Godowsky: 1
+Jean-Philippe Rameau: 1
+Johann Christian Fischer / Wolfgang Amadeus Mozart: 1
+Johann Pachelbel: 1
+Johann Sebastian Bach / Myra Hess: 1
+Johann Strauss / Alfred Grünfeld: 1
+Niccolò Paganini / Franz Liszt: 1
+Nikolai Rimsky-Korsakov / Sergei Rachmaninoff: 1
+Robert Schumann / Franz Liszt: 1
+Sergei Rachmaninoff / György Cziffra: 1
+Sergei Rachmaninoff / Vyacheslav Gryaznov: 1

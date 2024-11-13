@@ -7,11 +7,11 @@ task="H4"
 # tohoku-nlp/bert-base-japanese FacebookAI/roberta-base
 # microsoft/codebert-base-mlm neulab/codebert-javascript neulab/codebert-java neulab/codebert-python neulab/codebert-c
 # "
-models="bert-base-uncased" 
+models="neulab/codebert-python neulab/codebert-c" 
 step="final"
 seed=2020
 split="test"
-type="scratch"
+type="pretrain"
 # model="microsoft/codebert-base-mlm"
 # model_state="microsoft_codebert-base-mlm"
 token_lens="64 128 256 384 512"

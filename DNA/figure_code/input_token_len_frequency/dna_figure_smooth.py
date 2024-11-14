@@ -36,7 +36,7 @@ def create_single_graph(model, ax=None, save_individual=True):
     all_counts = list(token_counts.values())
     
     # Plot token count as bars for lengths from 64 to 512
-    ax.bar(all_lengths, all_counts, color='lightsteelblue', width=1, label='Token Count (Bar)')
+    # ax.bar(all_lengths, all_counts, color='lightsteelblue', width=1, label='Token Count (Bar)')
     
     # Plot specific token counts (64, 128, 256, 384, 512) as a line with markers
     specific_lengths = [64, 128, 256, 384, 512]
@@ -70,7 +70,7 @@ def create_single_graph(model, ax=None, save_individual=True):
     ax2 = ax.twinx()  # Create a secondary y-axis for performance data
     
     # Plot performance data on the same x-axis as token lengths but with its own y-axis
-    line = ax2.plot(perf_lengths, performances, color='red', marker='o', label='Performance')
+    line = ax2.plot(perf_lengths, performances, color='red', marker='o', label='Accuracy')
     
     for x_val_perf, y_val_perf in zip(perf_lengths, performances):
         ax2.annotate(f'{y_val_perf:.3f}', (x_val_perf, y_val_perf), textcoords="offset points", xytext=(0,10), ha='center', fontsize=18)
@@ -79,7 +79,7 @@ def create_single_graph(model, ax=None, save_individual=True):
     ax2.set_ylim(common_y_perf_min, common_y_perf_max)
     
     # Set labels for performance axis
-    ax2.set_ylabel('Performance', fontsize=20)
+    ax2.set_ylabel('Accuracy', fontsize=20, rotation=270, labelpad=25)
 
     # Combine legends from both axes (token count and performance)
     lines1, labels1 = ax.get_legend_handles_labels()

@@ -1,0 +1,54 @@
+Dataset: code_search_net
+Average Token Count per Sequence: 216.68
+Total number of tokens: 984589
+Total number of sequences: 4544
+Top 10 Token Frequencies:
+Ġ: 342577
+Ċ: 47515
+ĉ: 27736
+.: 25209
+(: 18370
+Ġ{: 12486
+,: 12348
+): 10130
+Ġ=: 10060
+Ġ}: 8712
+Original dataset size: 454451
+Sampled dataset size: 4544
+
+Dataset: wikimedia/wikipedia
+Average Token Count per Sequence: 320.98
+Total number of tokens: 20567496
+Total number of sequences: 64078
+Top 10 Token Frequencies:
+Ċ: 1092666
+Ġthe: 754925
+,: 752878
+.: 639364
+Ġof: 471594
+Ġin: 389426
+Ġand: 373692
+Ġa: 264157
+Ġto: 222151
+Ġwas: 176649
+Original dataset size: 6407814
+Sampled dataset size: 64078
+
+Dataset: cc_news
+Average Token Count per Sequence: 336.82
+Total number of tokens: 2385342
+Total number of sequences: 7082
+Top 10 Token Frequencies:
+.: 87367
+Ġthe: 87203
+,: 83883
+Ċ: 54059
+Ġto: 46894
+Ġand: 41925
+Ġof: 41310
+Ġa: 37937
+Ġin: 33506
+âĢ: 27321
+Original dataset size: 708241
+Sampled dataset size: 7082
+

@@ -17,7 +17,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 # Model and dataset configurations
 model_name = "microsoft/codebert-base-mlm"
 datasets_config = [
-    ("cc_news", "text"),
     ("openwebtext", "text")
 ]
 

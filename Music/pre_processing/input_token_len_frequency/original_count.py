@@ -21,14 +21,14 @@ models = [
     # ("bert-base-uncased", "wikimedia/wikipedia", "20231101.en", "text"),
     # ("bert-base-chinese", "wikimedia/wikipedia", "20231101.zh", "text"),
     # ("bert-base-german-cased", "wikimedia/wikipedia", "20231101.de", "text"),
-    ("neuralmind/bert-base-portuguese-cased", "wikimedia/wikipedia", "20231101.pt", "text"),
+    # ("neuralmind/bert-base-portuguese-cased", "wikimedia/wikipedia", "20231101.pt", "text"),
     # ("tohoku-nlp/bert-base-japanese", "wikimedia/wikipedia", "20231101.ja", "text"),
     # ("microsoft/codebert-base-mlm", "code_search_net", "all", "whole_func_string"),
     # ("neulab/codebert-javascript", "code_search_net", "javascript", "whole_func_string"),
     # ("neulab/codebert-java", "code_search_net", "java", "whole_func_string"),
     # ("neulab/codebert-python", "code_search_net", "python", "whole_func_string"),
     # ("neulab/codebert-c", "code_search_net", "go", "whole_func_string")
-    # ("neulab/codebert-c", "code_search_net", "go", "whole_func_string")
+    ("neulab/codebert-c", "code_search_net", "go", "whole_func_string")
 ]
 
 def save_token_counts(token_counts, filename, truncate=True):
@@ -119,7 +119,7 @@ for model_name, dataset_name, dataset_config, text_field in models:
         continue
 
     dataset = load_dataset(dataset_name, dataset_config, split='train')
-    sampled_dataset = create_sample(dataset, sample_ratio=0.1)  # 1% sample
+    sampled_dataset = create_sample(dataset, sample_ratio=0.01)  # 1% sample
 
     average_count, token_counts_per_sequence, token_counts_per_sequence_no_truncation, frequencies, total_tokens = analyze_tokens(sampled_dataset, tokenizer, text_field)
 

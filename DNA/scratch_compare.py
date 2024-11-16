@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
-# H4    [0.7193, 0.7067] [0.6167, 0.6951]
-# H3K9ac    [0.8358, 0.8595] [0.6150, 0.8388]
-# Protein   [0.6344, 0.6645] [0.5760, 0.6392]
-# Music [0.4829, ] [0.4787, 0.4493]
+# H4    [0.7242, 0.7040] [0.6178, 0.6901]
+# H3K9ac    [0.8360, 0.8640] [0.6247, 0.8417]
+# Protein   [0.6380, 0.6633] [0.5760, 0.6392]
+# Music [0.4825, 0.4801 ] [0.4161, 0.4470]
 # Data
 models = ['BERT', 'CodeBERT']
-pre_training_results = [0.7193, 0.7067]
-scratch_results = [0.6167, 0.6951]
+pre_training_results = [0.6380, 0.6633]
+scratch_results = [0.5760, 0.6392]
 
 # Set up the bar positions
 x = np.arange(len(models))
@@ -28,10 +28,10 @@ ax.set_ylabel('Accuracy', fontsize=18)
 # ax.set_title('Comparison of Pre-Training and Scratch Results', fontsize=18)
 ax.set_xticks(x)
 ax.set_xticklabels(models, fontsize=30)
-ax.legend(fontsize=16)
+ax.legend(fontsize=16, loc='upper left')
 
 # Set y-axis limits
-ax.set_ylim(0.5, 0.8)
+ax.set_ylim(0.5, 0.7)
 
 # Increase font size for tick labels
 ax.tick_params(axis='both', which='major', labelsize=20)

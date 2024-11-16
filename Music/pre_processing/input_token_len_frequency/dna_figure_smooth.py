@@ -42,11 +42,11 @@ def create_single_graph(model, ax=None, save_individual=True):
     specific_lengths = [64, 128, 256, 384, 512]
     specific_counts = [token_counts.get(length, 0) for length in specific_lengths]
     
-    ax.plot(specific_lengths, specific_counts, color='blue', linewidth=2, marker='o', label='Token Count (Line)')
+    ax.plot(specific_lengths, specific_counts, color='blue', linewidth=2, marker='o', label='Sequence Count')
     
     # Annotate actual token count values on the graph for specific lengths
     for x_val, y_val in zip(specific_lengths, specific_counts):
-        ax.annotate(f'{y_val}', (x_val, y_val), textcoords="offset points", xytext=(0,10), ha='center', fontsize=18)
+        ax.annotate(f'{y_val}', (x_val, y_val), textcoords="offset points", xytext=(0,10), ha='center', fontsize=20)
     
     # Set logarithmic scale for y-axis (token counts)
     ax.set_yscale('log')
@@ -58,8 +58,8 @@ def create_single_graph(model, ax=None, save_individual=True):
     ax.set_xlim(32, 544)  # Adding margin by extending beyond 64 and 512
     
     # Add labels and title
-    ax.set_xlabel('Input Token Sequence Length', fontsize=24)
-    ax.set_ylabel('Count (log scale)', fontsize=24)
+    ax.set_xlabel('Input Token Sequence Length', fontsize=26)
+    ax.set_ylabel('Count (log scale)', fontsize=26)
 
     # Plot performance data (line chart on secondary y-axis)
     perf_lengths = [64, 128, 256, 384, 512]
@@ -79,17 +79,17 @@ def create_single_graph(model, ax=None, save_individual=True):
     ax2.set_ylim(common_y_perf_min, common_y_perf_max)
     
     # Set labels for performance axis
-    ax2.set_ylabel('Accuracy', fontsize=20, rotation=270, labelpad=25)
+    ax2.set_ylabel('Accuracy', fontsize=24, rotation=270, labelpad=25)
 
     # Combine legends from both axes (token count and performance)
     lines1, labels1 = ax.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
     
-    ax.legend(lines1 + lines2, labels1 + labels2, loc='upper right', fontsize=16)
+    ax.legend(lines1 + lines2, labels1 + labels2, loc='upper right', fontsize=18)
 
     # Increase tick label font size
-    ax.tick_params(axis='both', which='major', labelsize=18)
-    ax2.tick_params(axis='y', which='major', labelsize=18)
+    ax.tick_params(axis='both', which='major', labelsize=26)
+    ax2.tick_params(axis='y', which='major', labelsize=26)
 
     # Set x-axis ticks to show specific lengths (64-512)
     ax.set_xticks(specific_lengths)
@@ -102,6 +102,80 @@ def create_single_graph(model, ax=None, save_individual=True):
         plt.savefig(f'figure/{model}_token_count_vs_performance.png', dpi=300,bbox_inches='tight')
         plt.close()
         print(f"Graph saved as '{model}_token_count_vs_performance.png'")
+
+def create_combined_graph(models, paper_name_models, output_filename):
+    fig, axs = plt.subplots(2, 1, figsize=(15, 20))
+    # fig.suptitle("Token Count Distribution and Performance Comparison", fontsize=28)
+
+    for i, model in enumerate(models):
+        create_single_graph(model, ax=axs[i], save_individual=False)
+    
+    for i, model_name in enumerate(paper_name_models):
+        axs[i].set_title(model_name, fontsize=22)
+    
+    # Adjust the layout
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.95, hspace=0.3)
+
+    plt.savefig(f'figure/{output_filename}', dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Combined graph saved as '{output_filename}'")
+
+def create_combined_graph_2(model_pairs, output_filename):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(30, 10))
+    # fig.suptitle("Token Count Distribution and Performance Comparison", fontsize=28)
+
+    # Global y-axis limits
+    common_y_count_min = 1e1
+    common_y_count_max = 1e7
+    common_y_perf_min = 0.1
+    common_y_perf_max = 0.7
+
+    # Specific token lengths
+    specific_lengths = [64, 128, 256, 384, 512]
+
+    for ax, (model, model_title) in zip([ax1, ax2], model_pairs):
+        performance_data = load_performance_data(f'{model}_result/performance_results.json')
+        counts_file = f'{model}_result/token_counts_original.txt'
+        token_counts = read_token_counts(counts_file)
+
+        specific_counts = [token_counts.get(length, 0) for length in specific_lengths]
+        performances = [performance_data[str(length)] for length in specific_lengths]
+
+        # Main plot for token counts
+        ax.plot(specific_lengths, specific_counts, color='blue', linewidth=2, marker='o', label='Sequence Count')
+        ax.set_yscale('log')
+        ax.set_ylim(common_y_count_min, common_y_count_max)
+        ax.set_xlim(32, 544)
+        ax.set_xlabel('Input Token Sequence Length', fontsize=26)
+        ax.set_ylabel('Count (log scale)', fontsize=26)
+        ax.set_title(model_title, fontsize=26)  # Use the paper name model title
+
+        # Secondary y-axis for performance
+        ax_perf = ax.twinx()
+        ax_perf.plot(specific_lengths, performances, color='red', marker='o', label='Accuracy')
+        ax_perf.set_ylim(common_y_perf_min, common_y_perf_max)
+        ax_perf.set_ylabel('Accuracy', fontsize=24, rotation=270, labelpad=25)
+
+        # Add legend
+        lines1, labels1 = ax.get_legend_handles_labels()
+        lines2, labels2 = ax_perf.get_legend_handles_labels()
+        ax.legend(lines1 + lines2, labels1 + labels2, loc='upper right', fontsize=18)
+
+        # Annotate values
+        for x, y, p in zip(specific_lengths, specific_counts, performances):
+            ax.annotate(f'{y}', (x, y), textcoords="offset points", xytext=(0,10), ha='center', fontsize=26)
+            ax_perf.annotate(f'{p:.3f}', (x, p), textcoords="offset points", xytext=(0,10), ha='center', fontsize=26)
+
+        # Set x-axis ticks
+        ax.set_xticks(specific_lengths)
+        ax.tick_params(axis='both', which='major', labelsize=26)
+        ax_perf.tick_params(axis='y', which='major', labelsize=26)
+
+    plt.tight_layout()
+    plt.savefig(f'figure/{output_filename}', dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"Combined graph saved as '{output_filename}'")
 
 # List of models
 models = [
@@ -117,28 +191,41 @@ models = [
     'neulab_codebert-c'
 ]
 
+paper_name_models = [
+    'BERT (English)',
+    'BERT-c',
+    'BERT-g',
+    'BERT-p',
+    'BERT-j',
+    'CodeBERT',
+    'Javascript',
+    'Java',
+    'Python',
+    'C',
+]
+
+# Create combined graphs with 2 models per figure
+# Create a list of tuples pairing each model with its paper name
+model_pairs = list(zip(models, paper_name_models))
+
+# Create combined graphs with 2 models per figure
+for i in range(0, len(model_pairs), 2):
+    create_combined_graph_2(
+        model_pairs[i:i+2],
+        f'combined_token_count_vs_performance_{i//2+1}.png'
+    )
 # Set common y-axis limits for token counts and performance
-common_y_count_min = 1e0  # Minimum count (log scale)
+common_y_count_min = 1e1  # Minimum count (log scale)
 common_y_count_max = 1e7  # Maximum count (log scale)
 
-common_y_perf_min = 0.0      # Minimum performance value
+common_y_perf_min = 0.0    # Minimum performance value
 common_y_perf_max = 0.7  # Maximum performance value
 
 # Create individual graphs for each model
 for model in models:
    create_single_graph(model)
 
-# Create combined graph with subplots (for first five models only)
-fig, axs = plt.subplots(2 ,3 ,figsize=(30 ,20))
-fig.suptitle("Token Count Distribution and Performance for Different Models" ,fontsize=28)
 
-for i in range(5):  
-   row_idx=i//3  
-   col_idx=i%3  
-   create_single_graph(models[i],ax=axs[row_idx][col_idx],save_individual=False)
-
-# Remove empty subplot if necessary 
-fig.delaxes(axs[1][2])
 
 plt.tight_layout()
 plt.savefig('figure/combined_token_count_vs_performance.png' ,dpi=300,bbox_inches='tight')

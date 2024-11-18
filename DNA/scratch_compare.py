@@ -4,10 +4,12 @@ import numpy as np
 # H3K9ac    [0.8360, 0.8640] [0.6247, 0.8417]
 # Protein   [0.6380, 0.6633] [0.5760, 0.6392]
 # Music [0.4825, 0.4801 ] [0.4161, 0.4470]
+# all_results_avg [0.67, 0.67] [0.56, 0.65]
+# freq_avg [0.7221, 0.7247] [0.6956, 0.6947]
 # Data
 models = ['BERT', 'CodeBERT']
-pre_training_results = [0.6380, 0.6633]
-scratch_results = [0.5760, 0.6392]
+pre_training_results = [0.7221, 0.7247]
+scratch_results = [0.6956, 0.6947]
 
 # Set up the bar positions
 x = np.arange(len(models))
@@ -20,18 +22,18 @@ group_distance = 0.2  # Decrease this value to bring groups closer
 fig, ax = plt.subplots(figsize=(8, 5))
 
 # Create the bars with adjusted positions
-rects1 = ax.bar(x - width/2, pre_training_results, width, label='Pre-Trained', color='#1f77b4') # basic blue hex code
-rects2 = ax.bar(x + width/2, scratch_results, width, label='Scratch', color='orange')
+rects1 = ax.bar(x - width/2, pre_training_results, width, label='Head', color='blue') # basic blue hex code
+rects2 = ax.bar(x + width/2, scratch_results, width, label='Tail', color='pink')
 
 # Customize the chart
 ax.set_ylabel('Accuracy', fontsize=18)
 # ax.set_title('Comparison of Pre-Training and Scratch Results', fontsize=18)
 ax.set_xticks(x)
 ax.set_xticklabels(models, fontsize=30)
-ax.legend(fontsize=16, loc='upper left')
+ax.legend(fontsize=16, loc='upper right')
 
 # Set y-axis limits
-ax.set_ylim(0.5, 0.7)
+ax.set_ylim(0.5, 0.8)
 
 # Increase font size for tick labels
 ax.tick_params(axis='both', which='major', labelsize=20)
@@ -54,7 +56,5 @@ ax.set_xlim(-0.5, len(models) - 0.5)
 
 # Adjust layout and save the figure
 plt.tight_layout()
-plt.savefig('pretrain_scratch_compare.png', dpi=300)
+plt.savefig('Head_tail_compare.png', dpi=300)
 
-# Display the plot (optional)
-plt.show()

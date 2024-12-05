@@ -27,10 +27,10 @@ fig, ax = plt.subplots(figsize=(15, 6))
 
 # Define colors for pre-trained tasks
 pretrained_colors = {
-    'H4': 'purple',      # Mild red
-    'H3K9ac': 'purple',  # Mild red
-    'Protein': 'green',
-    'Music': 'red'    # Blue
+    'H4': '#20B2AA',       # Royal Blue
+    'H3K9ac': '#48D1CC',   # Light Sea Green
+    'Protein': '#6A5ACD',  # Slate Blue
+    'Music': '#4169E1'    # Medium Turquoise
 }
 
 # Plot bars for BERT and CodeBERT

@@ -24,10 +24,10 @@ fig, ax = plt.subplots(figsize=(10, 6))
 
 # Define colors for pre-trained tasks
 pretrained_colors = {
-    'H4': 'purple',
-    'H3K9ac': 'purple',
-    'Protein': 'green',
-    'Music': 'red'
+    'H4': 'deepskyblue',
+    'H3K9ac': 'dodgerblue',
+    'Protein': 'royalblue',
+    'Music': 'mediumblue'
 }
 
 # Plot bars

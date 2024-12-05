@@ -1,0 +1,160 @@
+bert-base-uncased Results:
+Token Counts:
+256: 740
+384: 504
+512: 388
+
+Performance Results:
+256: 0.8332
+384: 0.8215
+512: 0.8107
+
+Pearson Correlation (256-512): 0.9854
+P-value: 0.1090
+
+==================================================
+
+bert-base-chinese Results:
+Token Counts:
+256: 178
+384: 80
+512: 54
+
+Performance Results:
+256: 0.8193
+384: 0.8213
+512: 0.8065
+
+Pearson Correlation (256-512): 0.5637
+P-value: 0.6187
+
+==================================================
+
+bert-base-german-cased Results:
+Token Counts:
+256: 337
+384: 286
+512: 217
+
+Performance Results:
+256: 0.7588
+384: 0.7701
+512: 0.7358
+
+Pearson Correlation (256-512): 0.7204
+P-value: 0.4879
+
+==================================================
+
+neuralmind_bert-base-portuguese-cased Results:
+Token Counts:
+256: 100
+384: 61
+512: 44
+
+Performance Results:
+256: 0.8399
+384: 0.8334
+512: 0.8117
+
+Pearson Correlation (256-512): 0.8655
+P-value: 0.3341
+
+==================================================
+
+tohoku-nlp_bert-base-japanese Results:
+Token Counts:
+256: 164
+384: 132
+512: 92
+
+Performance Results:
+256: 0.8516
+384: 0.8399
+512: 0.8132
+
+Pearson Correlation (256-512): 0.9876
+P-value: 0.1004
+
+==================================================
+
+microsoft_codebert-base-mlm Results:
+Token Counts:
+256: 854
+384: 704
+512: 630
+
+Performance Results:
+256: 0.8531
+384: 0.8577
+512: 0.8429
+
+Pearson Correlation (256-512): 0.5186
+P-value: 0.6529
+
+==================================================
+
+neulab_codebert-javascript Results:
+Token Counts:
+256: 845
+384: 709
+512: 640
+
+Performance Results:
+256: 0.8732
+384: 0.8718
+512: 0.8431
+
+Pearson Correlation (256-512): 0.7845
+P-value: 0.4258
+
+==================================================
+
+neulab_codebert-java Results:
+Token Counts:
+256: 854
+384: 704
+512: 630
+
+Performance Results:
+256: 0.8652
+384: 0.8625
+512: 0.8427
+
+Pearson Correlation (256-512): 0.8214
+P-value: 0.3864
+
+==================================================
+
+neulab_codebert-python Results:
+Token Counts:
+256: 862
+384: 716
+512: 628
+
+Performance Results:
+256: 0.8767
+384: 0.8645
+512: 0.8581
+
+Pearson Correlation (256-512): 0.9994
+P-value: 0.0229
+
+==================================================
+
+neulab_codebert-c Results:
+Token Counts:
+256: 861
+384: 708
+512: 634
+
+Performance Results:
+256: 0.8751
+384: 0.8465
+512: 0.8313
+
+Pearson Correlation (256-512): 0.9997
+P-value: 0.0149
+
+==================================================
+

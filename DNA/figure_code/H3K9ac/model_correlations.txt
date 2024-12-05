@@ -1,0 +1,60 @@
+bert-base-uncased:
+  Pearson Correlation: 0.9854
+  Pearson P-value: 0.1090
+  Spearman Correlation: 1.0000
+  Spearman P-value: 0.0000
+
+bert-base-chinese:
+  Pearson Correlation: 0.5637
+  Pearson P-value: 0.6187
+  Spearman Correlation: 0.5000
+  Spearman P-value: 0.6667
+
+bert-base-german-cased:
+  Pearson Correlation: 0.7204
+  Pearson P-value: 0.4879
+  Spearman Correlation: 0.5000
+  Spearman P-value: 0.6667
+
+neuralmind_bert-base-portuguese-cased:
+  Pearson Correlation: 0.8655
+  Pearson P-value: 0.3341
+  Spearman Correlation: 1.0000
+  Spearman P-value: 0.0000
+
+tohoku-nlp_bert-base-japanese:
+  Pearson Correlation: 0.9876
+  Pearson P-value: 0.1004
+  Spearman Correlation: 1.0000
+  Spearman P-value: 0.0000
+
+microsoft_codebert-base-mlm:
+  Pearson Correlation: 0.5186
+  Pearson P-value: 0.6529
+  Spearman Correlation: 0.5000
+  Spearman P-value: 0.6667
+
+neulab_codebert-javascript:
+  Pearson Correlation: 0.7845
+  Pearson P-value: 0.4258
+  Spearman Correlation: 1.0000
+  Spearman P-value: 0.0000
+
+neulab_codebert-java:
+  Pearson Correlation: 0.8214
+  Pearson P-value: 0.3864
+  Spearman Correlation: 1.0000
+  Spearman P-value: 0.0000
+
+neulab_codebert-python:
+  Pearson Correlation: 0.9994
+  Pearson P-value: 0.0229
+  Spearman Correlation: 1.0000
+  Spearman P-value: 0.0000
+
+neulab_codebert-c:
+  Pearson Correlation: 0.9997
+  Pearson P-value: 0.0149
+  Spearman Correlation: 1.0000
+  Spearman P-value: 0.0000
+

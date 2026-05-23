@@ -8,7 +8,7 @@ import random
 import numpy as np
 import copy
 import argparse
-import tensorboardX
+#import tensorboardX
 #import torch.utils.tensorboard
 #from torch.utils.tensorboard import SummaryWriter
 
@@ -174,8 +174,8 @@ def train(args):
     scheduler = get_linear_schedule_with_warmup(optimizer, args['warmup_step'], len(iterator_train)*epoch/gradient_accumulation)
 
     
-    writer = tensorboardX.SummaryWriter(log_dir=args['logdir'],
-                                        filename_suffix=f'_train_{args["task"]}_{args["type"]}_seed{args["seed"]}_shift{args["shift"]}')
+    # writer = tensorboardX.SummaryWriter(log_dir=args['logdir'],
+    #                                     filename_suffix=f'_train_{args["task"]}_{args["type"]}_seed{args["seed"]}_shift{args["shift"]}')
     
     log_file = create_log_file(args)
     log_message(log_file, f"Training started with arguments: {args}")
@@ -211,8 +211,10 @@ def train(args):
                                  labels = labels)
             if args['n_gpu'] > 1:
                 loss = loss.mean()
-            loss = outputs.loss
-            logits = outputs.logits
+            # loss = outputs.loss
+            loss = outputs.loss if hasattr(outputs, "loss") else outputs[0]
+            # logits = outputs.logits
+            logits = outputs.logits if hasattr(outputs, "logits") else outputs[1]
             loss = loss/gradient_accumulation
             loss.backward()
             
@@ -226,7 +228,7 @@ def train(args):
                 update_step += 1
                 if update_step % logging_step == 0:
                     avg_loss = (tr_loss - logging_loss) / logging_step
-                    writer.add_scalar('loss', avg_loss, update_step)
+                    # writer.add_scalar('loss', avg_loss, update_step)
                     log_message(log_file, f"[Step {update_step}] Loss: {avg_loss:.4f}")
                     #print(f"[step {update_step}] loss: {};\batch acc: {batch_acc.item()/batch_size}")
                     logging_loss = tr_loss

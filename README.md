@@ -1,7 +1,7 @@
 # Pre-trained Language Model Fine-tuning on Non-textual Data Understanding
 
 <p align="center">
-  <img src="./ㅁssets/Thesis_structure.png" width="850" alt="Project Structure: Fine-tuning Pre-trained Language Models on Non-textual Data">
+  <img src="./Assets/Thesis_sturcture.png" width="850" alt="Project Structure: Fine-tuning Pre-trained Language Models on Non-textual Data">
 </p>
 
 <p align="center">
